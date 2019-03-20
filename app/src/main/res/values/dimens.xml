@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="intro_line_width">4dp</dimen>
+    <dimen name="map_navigation_btn_size">48dp</dimen>
+    <dimen name="map_bacl_btn_margin_bottom">24dp</dimen>
+</resources>

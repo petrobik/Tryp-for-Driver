@@ -1,0 +1,113 @@
+<LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="17dp"
+        android:fontFamily="@font/opensans_bold"
+        android:text="Pie Chart"
+        android:textColor="@android:color/black"
+        android:textSize="14sp" />
+
+    <com.github.mikephil.charting.charts.PieChart
+        android:id="@+id/expense_tracking_pie_chart"
+        android:layout_width="180dp"
+        android:layout_height="180dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="6dp"/>
+
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:columnCount="3"
+        android:orientation="horizontal"
+        android:rowCount="3">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:drawableLeft="@drawable/ic_circle_green"
+            android:drawablePadding="5dp"
+            android:fontFamily="@font/opensans_regular"
+            android:text="@string/oil_change"
+            android:textColor="#828282"
+            android:textSize="11sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:drawableLeft="@drawable/ic_circle_magenta"
+            android:drawablePadding="5dp"
+            android:fontFamily="@font/opensans_regular"
+            android:text="@string/break_change"
+            android:textColor="#828282"
+            android:textSize="11sp" />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:fontFamily="@font/opensans_regular"
+            android:text="@string/vehicle_service"
+            android:textColor="#828282"
+            android:textSize="11sp"
+            android:drawableLeft="@drawable/ic_circle_lightblue"
+            android:drawablePadding="5dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:fontFamily="@font/opensans_regular"
+            android:text="@string/gas_fill_up"
+            android:textColor="#828282"
+            android:textSize="11sp"
+            android:drawableLeft="@drawable/ic_circle_orange"
+            android:drawablePadding="5dp"/>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:fontFamily="@font/opensans_regular"
+            android:text="@string/tire_change"
+            android:textColor="#828282"
+            android:textSize="11sp"
+            android:drawableLeft="@drawable/ic_circle_pink"
+            android:drawablePadding="5dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:fontFamily="@font/opensans_regular"
+            android:text="@string/car_wash"
+            android:textColor="#828282"
+            android:textSize="11sp"
+            android:drawableLeft="@drawable/ic_circle_blue"
+            android:drawablePadding="5dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:fontFamily="@font/opensans_regular"
+            android:text="@string/car_essentials"
+            android:textColor="#828282"
+            android:textSize="11sp"
+            android:drawableLeft="@drawable/ic_circle_lightgreen"
+            android:drawablePadding="5dp"/>
+
+    </GridLayout>
+
+</LinearLayout>

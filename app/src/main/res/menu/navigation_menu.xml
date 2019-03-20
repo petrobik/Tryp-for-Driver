@@ -1,0 +1,65 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_home"
+        android:icon="@drawable/ic_home_navigation"
+        android:title="@string/action_home"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_trip_history"
+        android:icon="@drawable/ic_navigation_trip_history"
+
+        android:title="@string/action_trip_history"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_reports"
+        android:icon="@drawable/ic_navigation_reports"
+
+        android:title="@string/action_reports"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_notification"
+        android:icon="@drawable/ic_navigation_notification"
+        android:title="@string/action_notification"
+
+        app:actionLayout="@layout/menu_notification_counter"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_expense_tracking"
+        android:icon="@drawable/ic_navigation_expense_tracking"
+        android:title="@string/action_expense_tracking"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_emergency_contact"
+        android:icon="@drawable/ic_navigation_emergency_contact"
+
+        android:title="@string/action_emergency_contact"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_invite_friend"
+        android:icon="@drawable/ic_navigation_invite_friend"
+
+        android:title="@string/action_invite_friend"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_help"
+        android:icon="@drawable/ic_navigation_help"
+
+        android:title="@string/action_help"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_about_us"
+        android:icon="@drawable/ic_navigation_about_us"
+
+        android:title="@string/action_about_us"
+        app:showAsAction="always" />
+    <item
+        android:enabled="false"
+        android:title="" />
+    <item
+        android:id="@+id/action_logout"
+        android:icon="@drawable/ic_navigation_logout"
+
+        android:title="@string/action_logout"
+        app:showAsAction="always" />
+</menu>

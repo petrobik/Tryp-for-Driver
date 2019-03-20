@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: androidx.test:monitor:1.1.0-alpha4@aar">
+    <CLASSES>
+      <root url="file://C:/Users/Public/.gradle/caches/transforms-1/files-1.1/monitor-1.1.0-alpha4.aar/cafef0c00de7a8248686655ed7a33539/res" />
+      <root url="jar://C:/Users/Public/.gradle/caches/transforms-1/files-1.1/monitor-1.1.0-alpha4.aar/cafef0c00de7a8248686655ed7a33539/jars/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://C:/Users/Public/.gradle/caches/modules-2/files-2.1/androidx.test/monitor/1.1.0-alpha4/d3857cdc14534819368d50d8b40730879606883a/monitor-1.1.0-alpha4-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

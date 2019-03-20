@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="136dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@android:color/white"
+    android:orientation="horizontal"
+    android:gravity="bottom"
+    android:padding="16dp">
+
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:src="@drawable/daniel"
+        app:civ_border_color="@color/trip_accent_color"
+        app:civ_border_width="3sp"
+        />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="64dp"
+        android:orientation="vertical"
+        android:layout_marginStart="14dp"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="David Test"
+            android:fontFamily="@font/opensans_semibold"
+            android:textSize="18sp"
+            android:layout_marginBottom="4dp"
+            android:textColor="#333333"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="4.8"
+            android:gravity="center"
+            android:fontFamily="@font/opensans_regular"
+            android:textSize="18sp"
+            android:textColor="#828282"
+            android:drawableRight="@drawable/ic_star"
+            android:drawablePadding="6dp" />
+
+    </LinearLayout>
+
+</LinearLayout>
