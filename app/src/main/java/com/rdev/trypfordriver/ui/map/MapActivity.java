@@ -192,6 +192,7 @@ public class MapActivity extends DaggerAppCompatActivity implements MapContract.
         mMap.getUiSettings().setRotateGesturesEnabled(false);
         presenter.onMapReady();
 
+
         try {
             // Customise the styling of the base map using a JSON object defined
             // in a raw resource file.
@@ -202,6 +203,14 @@ public class MapActivity extends DaggerAppCompatActivity implements MapContract.
         } catch (Resources.NotFoundException e) {
             Log.e(TAG, "Can't find style. Error: ", e);
         }
+        mMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
+            public void onCameraMove() {
+                Float zoom = mMap.getCameraPosition().zoom;
+                if (zoom > 10) {
+                    currentPosMarker.setDimensions((float) (Math.pow(2.5, 20 - zoom) + 40));
+                }
+            }
+        });
 
     }
 
@@ -336,10 +345,19 @@ public class MapActivity extends DaggerAppCompatActivity implements MapContract.
                 .commit();
     }
 
+    LatLng currentPos;
+
     @Override
     public void showCurrentLocation(Location location) {
-        LatLng currentPos = new LatLng(location.getLatitude(), location.getLongitude());
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentPos, 17));
+        if (currentPos == null) {
+            //Animate with zoom for first Location update
+            currentPos = new LatLng(location.getLatitude(), location.getLongitude());
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentPos, 17));
+        } else {
+            //Animate without Zoom
+            currentPos = new LatLng(location.getLatitude(), location.getLongitude());
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(currentPos));
+        }
         if (currentPosMarker != null && currentPosMarker.isVisible()) {
             currentPosMarker.remove();
         }
