@@ -246,14 +246,16 @@ public class MapPresenter implements MapContract.Presenter, RideRepository.Compa
     @Override
     public void onLocationChanged(Location location) {
         Log.d("tag", "OnLocationChange");
-        if (rideRepository.getAcceptedRide() != null) {
-            rideRepository.pushLocationToFirebase(location);
+        if (mView != null) {
+            if (rideRepository.getAcceptedRide() != null) {
+                rideRepository.pushLocationToFirebase(location);
+            }
+            if (driverRepository.isDriverAvailable()) {
+                driverRepository.updateDriverLocation(Utill.locationToLatLng(location));
+            } else {
+                rideRepository.compareLocation(Utill.locationToLatLng(location), MapPresenter.this);
+            }
+            mView.showCurrentLocation(location);
         }
-        if (driverRepository.isDriverAvailable()) {
-            driverRepository.updateDriverLocation(Utill.locationToLatLng(location));
-        } else {
-            rideRepository.compareLocation(Utill.locationToLatLng(location), MapPresenter.this);
-        }
-        mView.showCurrentLocation(location);
     }
 }

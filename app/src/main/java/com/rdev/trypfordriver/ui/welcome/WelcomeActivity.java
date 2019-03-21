@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.firebase.FirebaseApp;
 import com.rdev.trypfordriver.R;
 import com.rdev.trypfordriver.ui.createAccount.CreateActivity;
@@ -18,6 +19,7 @@ import com.rdev.trypfordriver.ui.login.LoginActivity;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.app.ActivityCompat;
+import io.fabric.sdk.android.Fabric;
 
 public class WelcomeActivity extends AppCompatActivity implements View.OnClickListener {
     AppCompatButton login_btn;
@@ -29,6 +31,7 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         FirebaseApp.initializeApp(this);
+        Fabric.with(this, new Crashlytics());
 
         if (Build.VERSION.SDK_INT >= 23) {
             isStoragePermissionGranted();

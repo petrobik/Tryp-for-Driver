@@ -20,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -82,6 +83,7 @@ public class MapActivity extends DaggerAppCompatActivity implements MapContract.
     private Location oldLocation;
     private float angle;
     Bitmap marker_bitmap;
+    ImageView menu_icon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,6 +113,13 @@ public class MapActivity extends DaggerAppCompatActivity implements MapContract.
 
         mDrawerLayout.openDrawer(Gravity.LEFT);
 
+        menu_icon = findViewById(R.id.menu_icon);
+        menu_icon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mDrawerLayout.openDrawer(Gravity.LEFT);
+            }
+        });
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         MenuItem notificationItem = navigationView.getMenu().findItem(R.id.action_notification);

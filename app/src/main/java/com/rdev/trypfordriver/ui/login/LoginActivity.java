@@ -78,9 +78,11 @@ public class LoginActivity extends AppCompatActivity {
                     password, "mm99999", "android")).enqueue(new Callback<DriverLoginResponse>() {
                 @Override
                 public void onResponse(Call<DriverLoginResponse> call, Response<DriverLoginResponse> response) {
-                    if (response.body().getData().getDriver() != null) {
+                    if (response.body().getData() != null) {
                         Driver driver = response.body().getData().getDriver();
                         startActivity(new Intent(LoginActivity.this, MapActivity.class).putExtra("id", Integer.toString(driver.getId())));
+                    } else {
+                        Toast.makeText(LoginActivity.this, "Error", Toast.LENGTH_SHORT).show();
                     }
                 }
 
