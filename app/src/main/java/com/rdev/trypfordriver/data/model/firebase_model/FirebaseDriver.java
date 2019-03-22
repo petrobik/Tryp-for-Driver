@@ -1,10 +1,15 @@
 package com.rdev.trypfordriver.data.model.firebase_model;
 
-import com.google.android.gms.maps.model.LatLng;
-import com.rdev.trypfordriver.data.model.favourite_driver.Driver;
-import com.rdev.trypfordriver.data.model.favourite_driver.Vehicle;
-
 public class FirebaseDriver {
+    public String getRideId() {
+        return rideId;
+    }
+
+    public void setRideId(String rideId) {
+        this.rideId = rideId;
+    }
+
+    public String rideId;
     private int maxLuggage;
 
     private double fare;

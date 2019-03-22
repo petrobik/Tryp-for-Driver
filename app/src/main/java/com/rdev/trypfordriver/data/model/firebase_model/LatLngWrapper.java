@@ -1,6 +1,7 @@
 package com.rdev.trypfordriver.data.model.firebase_model;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.database.Exclude;
 
 public class LatLngWrapper {
     double lat;
@@ -28,5 +29,10 @@ public class LatLngWrapper {
     public void setLocation(LatLng latLng) {
         this.lat = latLng.latitude;
         this.lng = latLng.longitude;
+    }
+
+    @Exclude
+    public LatLng getLocation() {
+        return new LatLng(lat, lng);
     }
 }

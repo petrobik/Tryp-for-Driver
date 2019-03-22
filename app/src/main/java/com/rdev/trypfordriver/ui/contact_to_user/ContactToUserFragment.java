@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.rdev.trypfordriver.R;
-import com.rdev.trypfordriver.data.model.accept_ride_response.Rides;
+import com.rdev.trypfordriver.data.model.firebase_model.FirebaseRide;
 import com.rdev.trypfordriver.ui.map.MapActivity;
 import com.rdev.trypfordriver.ui.map.MapPresenter;
 
@@ -26,7 +26,7 @@ import androidx.fragment.app.Fragment;
 public class ContactToUserFragment extends Fragment implements View.OnClickListener {
     @Inject
     MapPresenter mapPresenter;
-    Rides rides;
+    FirebaseRide rides;
     TextView adress_tv;
     TextView client_name_tv;
     ImageView client_avatar_iv;
@@ -34,7 +34,7 @@ public class ContactToUserFragment extends Fragment implements View.OnClickListe
     Button otp_btn;
 
     @SuppressLint("ValidFragment")
-    public ContactToUserFragment(Rides rides) {
+    public ContactToUserFragment(FirebaseRide rides) {
         this.rides = rides;
     }
 
@@ -43,8 +43,8 @@ public class ContactToUserFragment extends Fragment implements View.OnClickListe
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.contact_user, container, false);
         adress_tv = v.findViewById(R.id.adress_tv);
-        if (rides.getDestinationAddress() != null) {
-            adress_tv.setText(rides.getPickupAddress());
+        if (rides.getToAddress() != null) {
+            adress_tv.setText(rides.getFromAddress());
         }
         client_name_tv = v.findViewById(R.id.client_name_tv);
         client_name_tv.setOnClickListener(this);

@@ -7,6 +7,9 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.google.android.gms.maps.model.LatLng;
+import com.rdev.trypfordriver.utill.Utill;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -18,6 +21,10 @@ public class LocationRepository {
 
     public Location getCachedLocation() {
         return cachedLocation;
+    }
+
+    public LatLng getCachedLatLng() {
+        return Utill.locationToLatLng(cachedLocation);
     }
 
     @SuppressLint("MissingPermission")
@@ -41,7 +48,7 @@ public class LocationRepository {
 
     @SuppressLint("MissingPermission")
     public void registerLocationListener(final ProvideLocationCallback callback) {
-
+        callback.onLocationChanged(cachedLocation);
         locationManager.requestLocationUpdates(
                 LocationManager.GPS_PROVIDER, 1000, 5, new LocationListener() {
                     @Override
@@ -50,6 +57,7 @@ public class LocationRepository {
                         cachedLocation = location;
                         callback.onLocationChanged(location);
                     }
+                    //TODO wrap error
 
                     @Override
                     public void onStatusChanged(String s, int i, Bundle bundle) {
