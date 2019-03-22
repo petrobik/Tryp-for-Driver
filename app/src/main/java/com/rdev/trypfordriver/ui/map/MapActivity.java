@@ -214,7 +214,7 @@ public class MapActivity extends DaggerAppCompatActivity implements MapContract.
         }
         mMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
             public void onCameraMove() {
-                Float zoom = mMap.getCameraPosition().zoom;
+                float zoom = mMap.getCameraPosition().zoom;
                 if (zoom > 10) {
                     currentPosMarker.setDimensions((float) (Math.pow(2.5, 20 - zoom) + 40));
                 }
@@ -281,6 +281,8 @@ public class MapActivity extends DaggerAppCompatActivity implements MapContract.
                             /**create the camera with bounds and padding to set into map*/
                             final CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, width, height / 2, padding);
                             mMap.animateCamera(cu);
+                            float zoom = mMap.getCameraPosition().zoom;
+                            currentPosMarker.setDimensions((float) (Math.pow(2.5, 20 - zoom) + 40));
                         } else {
                             // Do something
                         }

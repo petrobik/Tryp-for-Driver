@@ -88,6 +88,7 @@ public class MapPresenter implements MapContract.Presenter, RideRepository.Compa
         driverRepository.setDriverAvailable(isChecked);
         if (driverRepository.isDriverAvailable()) {
             rideRepository.setRideListener(new RideRepository.ProvideRideCallback() {
+                //We are getting ride request and show it to driver
                 @Override
                 public void onGetRideRequest(FirebaseRide ridesItem) {
                     if (mView != null) {
@@ -121,6 +122,7 @@ public class MapPresenter implements MapContract.Presenter, RideRepository.Compa
         AvailableDriver driver = new AvailableDriver(driverRepository.getDriverId());
         driver.setLatLng(Utill.locationToLatLng(locationRepository.getCachedLocation()));
         rideRepository.acceptRide(driver);
+        driverRepository.setDriverAvailable(false);
         mView.showFragment(new ContactToUserFragment(rideRepository.getFirebaseRide()));
 //                rideRepository.rideToPickUp();
 //        rideRepository.acceptRide("18406", item.getRideRequestId(), new RideRepository.onAcceptRideCallBack() {
@@ -263,6 +265,7 @@ public class MapPresenter implements MapContract.Presenter, RideRepository.Compa
         driverRepository.updateDriverLocation(Utill.locationToLatLng(location));
         if (mView != null) {
             if (rideRepository.getAcceptedRide() != null) {
+                rideRepository.pushDriverLocation(Utill.locationToLatLng(location));
             }
 //            if (driverRepository.isDriverAvailable()) {
 //

@@ -14,9 +14,6 @@ import com.rdev.trypfordriver.data.model.firebase_model.AvailableDriver;
 import com.rdev.trypfordriver.data.model.firebase_model.FirebaseDriver;
 import com.rdev.trypfordriver.data.model.firebase_model.FirebaseRide;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -26,7 +23,7 @@ import androidx.annotation.NonNull;
 public class RideRepository implements ValueEventListener {
     private final DriverRepository driverRepository;
     ApiService service;
-    Rides acceptedRide;
+    FirebaseRide acceptedRide;
     int rideStatus = 0;
     static final int STATUS_RIDE_TO_PICK_UP = 1;
 
@@ -50,6 +47,7 @@ public class RideRepository implements ValueEventListener {
     }
 
     FirebaseDriver driver;
+    AvailableDriver availableDriver;
 
     public void setRideListener(final ProvideRideCallback callback) {
         this.callback = callback;
@@ -87,9 +85,11 @@ public class RideRepository implements ValueEventListener {
 //        });
 //    }
 
-    public void acceptRide(AvailableDriver driver) {
-        firebaseRide.setDriver(driver);
-        database.getReference("rides/" + firebaseRide.getId()).setValue(firebaseRide);
+    public void acceptRide(AvailableDriver availableDriver) {
+        this.availableDriver = availableDriver;
+        firebaseRide.setDriver(availableDriver);
+        this.acceptedRide = firebaseRide;
+        database.getReference("rides/" + firebaseRide.getId()).child("driver").setValue(availableDriver);
     }
 //    public void acceptRide(String userId, String rideRequestId, final onAcceptRideCallBack callBack) {
 //        service.driver_accept_ride(new AcceptRideBody(userId, rideRequestId)).enqueue(new Callback<AcceptRideResponse>() {
@@ -132,6 +132,7 @@ public class RideRepository implements ValueEventListener {
         rideStatus = STATUS_RIDE_COMPLETED;
     }
 
+    //Update driver model
     @Override
     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
         Log.d("tag", "OnDataChange in setRideListener");
@@ -144,6 +145,12 @@ public class RideRepository implements ValueEventListener {
     @Override
     public void onCancelled(@NonNull DatabaseError databaseError) {
 
+    }
+
+    public void pushDriverLocation(LatLng locationToLatLng) {
+        availableDriver.setLatLng(locationToLatLng);
+        firebaseRide.setDriver(availableDriver);
+        database.getReference("rides/" + firebaseRide.getId()).child("driver").setValue(availableDriver);
     }
 
     public interface ProvideRideCallback {
@@ -159,15 +166,15 @@ public class RideRepository implements ValueEventListener {
         Location to = new Location("locationB");
         if (rideStatus == STATUS_RIDE_TO_PICK_UP) {
             Log.d("tag", "rideStatus == STATUS_RIDE_TO_PICK_UP");
-            to.setLatitude(acceptedRide.getPickupLat());
-            to.setLongitude(acceptedRide.getPickupLng());
+//            to.setLatitude(acceptedRide.getPickupLat());
+//            to.setLongitude(acceptedRide.getPickupLng());
             Log.d("tag", "from.distanceTo(to)" + from.distanceTo(to));
             if (from.distanceTo(to) < 100) {
                 callBack.driverNearPickUp();
             }
         } else if (rideStatus == STATUS_RIDE_TO_DESTINATION) {
-            to.setLatitude(acceptedRide.getDestinationLat());
-            to.setLongitude(acceptedRide.getDestinationLng());
+//            to.setLatitude(acceptedRide.getDestinationLat());
+//            to.setLongitude(acceptedRide.getDestinationLng());
             Log.d("tag", "rideStatus == STATUS_RIDE_TO_DESTINATION");
             Log.d("tag", "from.distanceTo(to)" + from.distanceTo(to));
             if (from.distanceTo(to) < 100) {
@@ -183,7 +190,7 @@ public class RideRepository implements ValueEventListener {
 
     }
 
-    public Rides getAcceptedRide() {
+    public FirebaseRide getAcceptedRide() {
         return acceptedRide;
     }
 
