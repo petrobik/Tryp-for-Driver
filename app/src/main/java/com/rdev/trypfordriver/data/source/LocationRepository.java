@@ -27,8 +27,11 @@ public class LocationRepository {
         boolean gps_enabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         boolean network_enabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
         Log.d("tag", "Gps enabled " + gps_enabled + "network enabled " + network_enabled);
-        if (gps_enabled)
+        if (network_enabled) {
+            cachedLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+        } else if (gps_enabled) {
             cachedLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        }
     }
 
 

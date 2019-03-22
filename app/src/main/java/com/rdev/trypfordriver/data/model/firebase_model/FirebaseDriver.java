@@ -11,8 +11,6 @@ public class FirebaseDriver {
 
     private int maxPassenger;
 
-    private Driver driver;
-
     private String category;
 
     private String type;
@@ -50,14 +48,6 @@ public class FirebaseDriver {
 
     public void setMaxPassenger(int maxPassenger) {
         this.maxPassenger = maxPassenger;
-    }
-
-    public Driver getDriver() {
-        return driver;
-    }
-
-    public void setDriver(Driver driver) {
-        this.driver = driver;
     }
 
     public String getCategory() {

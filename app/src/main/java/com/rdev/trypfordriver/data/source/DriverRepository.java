@@ -119,6 +119,7 @@ public class DriverRepository {
                     driver = new FirebaseDriver();
                     driver.setId(driverId);
                     driver.setCategory("Tryp");
+                    driver.setType("liftback");
                     driver.setFirstName("Test");
                     driver.setLastName("test");
                     driver.setMaxLuggage(4);
