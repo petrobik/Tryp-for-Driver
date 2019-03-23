@@ -54,7 +54,7 @@ public class ContactToUserFragment extends Fragment implements View.OnClickListe
         backBtn = v.findViewById(R.id.back_btn);
         backBtn.setOnClickListener(this);
 
-        otp_btn = v.findViewById(R.id.otp_btn);
+        otp_btn = v.findViewById(R.id.decline_btn);
         otp_btn.setOnClickListener(this);
 
         return v;
@@ -72,7 +72,7 @@ public class ContactToUserFragment extends Fragment implements View.OnClickListe
             case R.id.client_name_tv:
                 ((MapActivity) getActivity()).presenter.onClientClick();
                 break;
-            case R.id.otp_btn:
+            case R.id.decline_btn:
                 Button apply_otp_button;
                 View dialog_view = LayoutInflater.from(getContext()).inflate(R.layout.otp_dialog, null);
                 apply_otp_button = dialog_view.findViewById(R.id.apply_otp_btn);

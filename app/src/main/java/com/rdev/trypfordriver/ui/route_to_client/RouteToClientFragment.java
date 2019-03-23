@@ -21,6 +21,7 @@ public class RouteToClientFragment extends Fragment implements View.OnClickListe
     String pickUpAdress;
     TextView adressTv;
     Button acceptRide;
+    Button decline_btn;
     private ImageButton backBtn;
 
     @SuppressLint("ValidFragment")
@@ -36,13 +37,10 @@ public class RouteToClientFragment extends Fragment implements View.OnClickListe
         if (pickUpAdress != null) {
             adressTv.setText(pickUpAdress);
         }
-        acceptRide = v.findViewById(R.id.apply_otp_btn);
-        acceptRide.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ((MapActivity) getActivity()).presenter.onRideRequestClick();
-            }
-        });
+        acceptRide = v.findViewById(R.id.accept_btn);
+        decline_btn = v.findViewById(R.id.decline_btn);
+        decline_btn.setOnClickListener(this);
+        acceptRide.setOnClickListener(this);
         backBtn = v.findViewById(R.id.back_btn);
         backBtn.setOnClickListener(this);
         return v;
@@ -50,6 +48,19 @@ public class RouteToClientFragment extends Fragment implements View.OnClickListe
 
     @Override
     public void onClick(View view) {
-        ((MapActivity) getActivity()).presenter.onBackClick();
+        MapActivity mapActivity = ((MapActivity) getActivity());
+        if (mapActivity!=null) {
+            switch (view.getId()) {
+                case R.id.back_btn:
+                    mapActivity.presenter.onBackClick();
+                    break;
+                case R.id.decline_btn:
+                    mapActivity.presenter.onDeclineRequest();
+                    break;
+                case R.id.accept_btn:
+                    mapActivity.presenter.onRideRequestClick();
+                    break;
+            }
+        }
     }
 }

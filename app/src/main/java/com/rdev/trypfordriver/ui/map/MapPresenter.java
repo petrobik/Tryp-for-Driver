@@ -9,12 +9,12 @@ import com.rdev.trypfordriver.data.model.firebase_model.AvailableDriver;
 import com.rdev.trypfordriver.data.model.firebase_model.FirebaseRide;
 import com.rdev.trypfordriver.data.model.on_demand_rides.RidesItem;
 import com.rdev.trypfordriver.data.source.DriverRepository;
+import com.rdev.trypfordriver.data.source.FakeLocationRepository;
 import com.rdev.trypfordriver.data.source.LocationRepository;
 import com.rdev.trypfordriver.data.source.RideRepository;
 import com.rdev.trypfordriver.di.ActivityScoped;
 import com.rdev.trypfordriver.ui.LeaveFeedbackFragment;
 import com.rdev.trypfordriver.ui.contact_to_user.ContactToUserFragment;
-import com.rdev.trypfordriver.ui.on_demand_rides.RidesFragment;
 import com.rdev.trypfordriver.ui.ready_to_trip.ReadyToTripFragment;
 import com.rdev.trypfordriver.ui.ride.RideFragment;
 import com.rdev.trypfordriver.ui.route_to_client.RouteToClientFragment;
@@ -29,9 +29,9 @@ import javax.inject.Inject;
 @ActivityScoped
 public class MapPresenter implements MapContract.Presenter, RideRepository.CompareLocationCallBack, LocationRepository.ProvideLocationCallback {
     MapContract.View mView;
-    LocationRepository locationRepository;
-    RidesFragment ridesFragment;
+    FakeLocationRepository locationRepository;
     RouteToClientFragment routeToClientFragment;
+    ReadyToTripFragment readyToTripFragment;
     RidesItem item;
     RideRepository rideRepository;
     Handler handler;
@@ -40,7 +40,7 @@ public class MapPresenter implements MapContract.Presenter, RideRepository.Compa
 
 
     @Inject
-    public MapPresenter(LocationRepository locationRepository, RideRepository rideRepository, DriverRepository driverRepository) {
+    public MapPresenter(FakeLocationRepository locationRepository, RideRepository rideRepository, DriverRepository driverRepository) {
         this.locationRepository = locationRepository;
         this.rideRepository = rideRepository;
         this.driverRepository = driverRepository;
@@ -55,10 +55,17 @@ public class MapPresenter implements MapContract.Presenter, RideRepository.Compa
     }
 
     @Override
+    public void onDeclineRequest() {
+        driverRepository.declineRideRequest();
+        mView.popBackStack();
+        mView.clearMap();
+    }
+
+    @Override
     public void onCurrentLocationBtnClick() {
         Log.d("tag", "onCurrentLocationBtnClick");
         if (locationRepository.getCachedLocation() != null) {
-            mView.showCurrentLocation(locationRepository.getCachedLocation());
+            mView.moveCameraToCurrentPosition(locationRepository.getCachedLocation());
         }
     }
 
@@ -75,6 +82,9 @@ public class MapPresenter implements MapContract.Presenter, RideRepository.Compa
     @Override
     public void attachView(MapContract.View mView) {
         this.mView = mView;
+        readyToTripFragment = new ReadyToTripFragment();
+        readyToTripFragment.setAvailable(driverRepository.isDriverAvailable());
+        mView.showFragment(readyToTripFragment);
     }
 
     @Override
@@ -147,18 +157,6 @@ public class MapPresenter implements MapContract.Presenter, RideRepository.Compa
     }
 
     @Override
-    public void onStartTripLocate() {
-        Log.d("tag", "onStartTripLocate");
-        mView.showFragment(new StartTrypFragment(item.getPickupAddress()));
-    }
-
-    @Override
-    public void onRideFinishLocation() {
-        Log.d("tag", "onRideFinishLocation");
-        mView.showFragment(new StopTrypFragment());
-    }
-
-    @Override
     public void onStartTrypClick() {
         Log.d("tag", "onStartTrypClick");
         FirebaseRide acceptedRide = rideRepository.getAcceptedRide();
@@ -199,6 +197,19 @@ public class MapPresenter implements MapContract.Presenter, RideRepository.Compa
         mView.cleanBackStack();
         mView.clearMap();
         mView.showFragment(new ReadyToTripFragment());
+    }
+
+    @Override
+    public void onLogoutClick() {
+        driverRepository.deleteCachedDriver();
+        mView.openLoginActivity();
+    }
+
+    @Override
+    public void onCreateReadyToTripFragment() {
+        if (readyToTripFragment != null) {
+            readyToTripFragment.setAvailable(driverRepository.isDriverAvailable());
+        }
     }
 
 

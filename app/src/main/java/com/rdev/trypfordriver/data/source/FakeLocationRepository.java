@@ -29,6 +29,7 @@ public class FakeLocationRepository {
     @Inject
     public FakeLocationRepository() {
         fakeLocations = new ArrayList<>();
+        fakeLocations.add(new LatLng(49.874513, 24.009247));
         fakeLocations.add(new LatLng(49.874568, 24.008773));
         fakeLocations.add(new LatLng(49.874609, 24.008516));
         fakeLocations.add(new LatLng(49.874671, 24.008119));

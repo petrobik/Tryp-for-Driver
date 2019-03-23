@@ -190,7 +190,6 @@ public class RideRepository implements ValueEventListener {
         void driverNearPickUp();
 
         void driverNearDestination();
-
     }
 
     public FirebaseRide getAcceptedRide() {

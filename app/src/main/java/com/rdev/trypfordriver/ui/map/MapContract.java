@@ -12,6 +12,8 @@ public interface MapContract {
     interface View {
         void showFragment(Fragment fragment);
 
+        void moveCameraToCurrentPosition(Location location);
+
         void showCurrentLocation(Location location);
 
         void popBackStack();
@@ -25,10 +27,16 @@ public interface MapContract {
         void cleanBackStack();
 
         void clearMap();
+
+        void openLoginActivity();
+
+        void setAvailable(boolean driverAvailable);
     }
 
     interface Presenter {
         void onBackClick();
+
+        void onDeclineRequest();
 
         void onCurrentLocationBtnClick();
 
@@ -46,12 +54,6 @@ public interface MapContract {
 
         void onClientClick();
 
-        //Driver arrived to pickup location
-        void onStartTripLocate();
-
-        //Driver arrived to destination location
-        void onRideFinishLocation();
-
         void onStartTrypClick();
 
         void onStopTrypClick();
@@ -63,5 +65,9 @@ public interface MapContract {
         void onFareCalculated(double totalDistance);
 
         void onSubmitFeedBack();
+
+        void onLogoutClick();
+
+        void onCreateReadyToTripFragment();
     }
 }

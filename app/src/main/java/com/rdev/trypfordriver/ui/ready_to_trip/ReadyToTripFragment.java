@@ -20,6 +20,7 @@ public class ReadyToTripFragment extends Fragment implements View.OnClickListene
     ImageButton backBtn;
     ImageButton currentLocationBtn;
     LabeledSwitch aSwitch;
+    boolean isAvailable = false;
 
     @Nullable
     @Override
@@ -29,7 +30,9 @@ public class ReadyToTripFragment extends Fragment implements View.OnClickListene
         backBtn.setOnClickListener(this);
         currentLocationBtn = v.findViewById(R.id.current_location_btn);
         currentLocationBtn.setOnClickListener(this);
+        ((MapActivity) getActivity()).presenter.onCreateReadyToTripFragment();
         aSwitch = v.findViewById(R.id.ready_switch);
+        aSwitch.setOn(isAvailable);
         aSwitch.setOnToggledListener(new OnToggledListener() {
             @Override
             public void onSwitched(ToggleableView toggleableView, boolean isOn) {
@@ -51,4 +54,7 @@ public class ReadyToTripFragment extends Fragment implements View.OnClickListene
         }
     }
 
+    public void setAvailable(boolean driverAvailable) {
+        this.isAvailable = driverAvailable;
+    }
 }

@@ -54,6 +54,7 @@ import com.rdev.trypfordriver.ui.expense_tracking.ExpenseActivity;
 import com.rdev.trypfordriver.ui.ready_to_trip.ReadyToTripFragment;
 import com.rdev.trypfordriver.ui.report.ReportActivity;
 import com.rdev.trypfordriver.ui.trip_history.TripHistoryActivity;
+import com.rdev.trypfordriver.ui.welcome.WelcomeActivity;
 
 import java.util.ArrayList;
 
@@ -87,7 +88,6 @@ public class MapActivity extends DaggerAppCompatActivity implements MapContract.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
         presenter.attachView(this);
-        Intent intent = getIntent();
         Places.initialize(getApplicationContext(), "AIzaSyC41CJUJMGe_9n44zKA0Jk1BAQ_pWp_p1o");
 
         if (Build.VERSION.SDK_INT >= 23) {
@@ -101,12 +101,7 @@ public class MapActivity extends DaggerAppCompatActivity implements MapContract.
             Window w = getWindow();
             w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         }
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.container, new ReadyToTripFragment())
-                .commit();
         mDrawerLayout = findViewById(R.id.drawer_layout);
-
-        mDrawerLayout.openDrawer(Gravity.LEFT);
 
         menu_icon = findViewById(R.id.menu_icon);
         menu_icon.setOnClickListener(new View.OnClickListener() {
@@ -277,8 +272,6 @@ public class MapActivity extends DaggerAppCompatActivity implements MapContract.
                             /**create the camera with bounds and padding to set into map*/
                             final CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, width, height / 2, padding);
                             mMap.animateCamera(cu);
-                            float zoom = mMap.getCameraPosition().zoom;
-                            currentPosMarker.setDimensions((float) (Math.pow(2.5, 20 - zoom) + 40));
                         } else {
                             // Do something
                         }
@@ -316,6 +309,17 @@ public class MapActivity extends DaggerAppCompatActivity implements MapContract.
         }
     }
 
+    @Override
+    public void openLoginActivity() {
+        startActivity(new Intent(this, WelcomeActivity.class));
+        finish();
+    }
+
+    @Override
+    public void setAvailable(boolean driverAvailable) {
+
+    }
+
 
 //    public void pickAdress() {
 //        listFragment = new AdressListFragment();
@@ -339,15 +343,6 @@ public class MapActivity extends DaggerAppCompatActivity implements MapContract.
 //                .addToBackStack("dest_pick").commit();
 //    }
 
-    public void moveCameraTo(LatLng position) {
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 17));
-    }
-
-    public void setMarkerTo(int resId, LatLng markerPos) {
-        mMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory.fromResource(resId))
-                .position(markerPos));
-    }
-
     public void zoomToCurrentLocation() {
         LatLng currentPos = new LatLng(pickUpLocation.latitude, pickUpLocation.longitude);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentPos, 17));
@@ -360,6 +355,16 @@ public class MapActivity extends DaggerAppCompatActivity implements MapContract.
                 .replace(R.id.container, fragment)
                 .addToBackStack("detail")
                 .commit();
+    }
+
+    @Override
+    public void moveCameraToCurrentPosition(Location location) {
+        currentPos = new LatLng(location.getLatitude(), location.getLongitude());
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentPos, 17));
+        float zoom = mMap.getCameraPosition().zoom;
+        if (zoom > 10) {
+            currentPosMarker.setDimensions((float) (Math.pow(2.5, 20 - zoom) + 40));
+        }
     }
 
     LatLng currentPos;
@@ -418,6 +423,9 @@ public class MapActivity extends DaggerAppCompatActivity implements MapContract.
                 getSupportFragmentManager().beginTransaction()
                         .add(R.id.container, new ReadyToTripFragment())
                         .commit();
+                break;
+            case R.id.action_logout:
+                presenter.onLogoutClick();
                 break;
         }
         mDrawerLayout.closeDrawer(Gravity.LEFT);

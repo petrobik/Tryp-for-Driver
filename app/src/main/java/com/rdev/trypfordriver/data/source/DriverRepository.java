@@ -28,7 +28,7 @@ public class DriverRepository implements ValueEventListener {
     FirebaseDatabase database;
 
     private String driverId; //test value, driver id will be available after login
-    private boolean isDriverAvailable;
+    private boolean isDriverAvailable = false;
     DatabaseReference currentDriverReference;
     DatabaseReference availableDriversReference;
     //Driver model
@@ -51,10 +51,10 @@ public class DriverRepository implements ValueEventListener {
     }
 
     public void updateDriverLocation(LatLng driverLocation) {
+        wrapper = new LatLngWrapper();
+        wrapper.setLocation(driverLocation);
+        availableDriver.setLocation(wrapper);
         if (isDriverAvailable) {
-            wrapper = new LatLngWrapper();
-            wrapper.setLocation(driverLocation);
-            availableDriver.setLocation(wrapper);
             availableDriversReference.child(driverId).setValue(availableDriver);
         }
     }
@@ -135,6 +135,19 @@ public class DriverRepository implements ValueEventListener {
         this.cachedDriver = cachedDriver;
         driverId = Integer.toString(cachedDriver.getDriverId());
         initModels(driverId);
+    }
+
+    public void deleteCachedDriver() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                driverDao.deleteAll();
+            }
+        }).start();
+    }
+
+    public void declineRideRequest() {
+        currentDriverReference.child("rideId").removeValue();
     }
 
     private static class insertAsyncTask extends AsyncTask<CachedDriver, Void, Void> {
