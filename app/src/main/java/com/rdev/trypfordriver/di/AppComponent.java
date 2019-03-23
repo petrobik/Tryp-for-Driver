@@ -3,6 +3,7 @@ package com.rdev.trypfordriver.di;
 import android.app.Application;
 
 import com.rdev.trypfordriver.TrypApplication;
+import com.rdev.trypfordriver.data.source.FakeLocationRepository;
 import com.rdev.trypfordriver.data.source.LocationRepository;
 import com.rdev.trypfordriver.ui.map.MapRepositoryModule;
 
@@ -33,8 +34,10 @@ public interface AppComponent extends AndroidInjector<TrypApplication> {
 
     LocationRepository getLocationRepository();
 
+    FakeLocationRepository getFareFakeLocationRepository();
+
     // Gives us syntactic sugar. we can then do DaggerAppComponent.builder().application(this).build().inject(this);
-    // never having to instantiate any modules or say which module we are passing the application to.
+    // never having to instant iate any modules or say which module we are passing the application to.
     // Application will just be provided into our app graph now.
     @Component.Builder
     interface Builder {

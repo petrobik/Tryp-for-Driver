@@ -9,6 +9,7 @@ import com.rdev.trypfordriver.data.model.firebase_model.AvailableDriver;
 import com.rdev.trypfordriver.data.model.firebase_model.FirebaseRide;
 import com.rdev.trypfordriver.data.model.on_demand_rides.RidesItem;
 import com.rdev.trypfordriver.data.source.DriverRepository;
+import com.rdev.trypfordriver.data.source.FakeLocationRepository;
 import com.rdev.trypfordriver.data.source.LocationRepository;
 import com.rdev.trypfordriver.data.source.RideRepository;
 import com.rdev.trypfordriver.di.ActivityScoped;
@@ -29,7 +30,7 @@ import javax.inject.Inject;
 @ActivityScoped
 public class MapPresenter implements MapContract.Presenter, RideRepository.CompareLocationCallBack, LocationRepository.ProvideLocationCallback {
     MapContract.View mView;
-    LocationRepository locationRepository;
+    FakeLocationRepository locationRepository;
     RidesFragment ridesFragment;
     RouteToClientFragment routeToClientFragment;
     RidesItem item;
@@ -40,7 +41,7 @@ public class MapPresenter implements MapContract.Presenter, RideRepository.Compa
 
 
     @Inject
-    public MapPresenter(LocationRepository locationRepository, RideRepository rideRepository, DriverRepository driverRepository) {
+    public MapPresenter(FakeLocationRepository locationRepository, RideRepository rideRepository, DriverRepository driverRepository) {
         this.locationRepository = locationRepository;
         this.rideRepository = rideRepository;
         this.driverRepository = driverRepository;
@@ -122,6 +123,7 @@ public class MapPresenter implements MapContract.Presenter, RideRepository.Compa
         AvailableDriver driver = new AvailableDriver(driverRepository.getDriverId());
         driver.setLatLng(Utill.locationToLatLng(locationRepository.getCachedLocation()));
         rideRepository.acceptRide(driver);
+        rideRepository.rideToPickUp();
         driverRepository.setDriverAvailable(false);
         mView.showFragment(new ContactToUserFragment(rideRepository.getFirebaseRide()));
 //                rideRepository.rideToPickUp();
@@ -160,16 +162,17 @@ public class MapPresenter implements MapContract.Presenter, RideRepository.Compa
     @Override
     public void onStartTrypClick() {
         Log.d("tag", "onStartTrypClick");
-        mView.drawRoute(new LatLng(item.getPickupLat(), item.getPickupLng()),
-                new LatLng(item.getDestinationLat(), item.getDestinationLng()));
-        mView.showFragment(new RideFragment(item.getPickupAddress(), item.getDestinationAddress()));
+        FirebaseRide acceptedRide = rideRepository.getAcceptedRide();
+        mView.drawRoute(acceptedRide.getPickUpLocation().getLocation(),
+                acceptedRide.getDestinationLocation().getLocation());
+        mView.showFragment(new RideFragment(acceptedRide.getFromAddress(), acceptedRide.getToAddress()));
     }
 
     @Override
     public void onStopTrypClick() {
         Log.d("tag", "onStopTrypClick");
         rideRepository.rideCompleted();
-        mView.showFragment(new RideCompletedFragment(rideRepository.getAcceptedRide().getFare() + "$"));
+        mView.showFragment(new RideCompletedFragment(rideRepository.getAcceptedRide().getFare()));
     }
 
 
@@ -195,6 +198,7 @@ public class MapPresenter implements MapContract.Presenter, RideRepository.Compa
     @Override
     public void onSubmitFeedBack() {
         mView.cleanBackStack();
+        mView.clearMap();
         mView.showFragment(new ReadyToTripFragment());
     }
 
@@ -207,7 +211,7 @@ public class MapPresenter implements MapContract.Presenter, RideRepository.Compa
     public void driverNearPickUp() {
         Log.d("tag", "driverNearPickUp");
         rideRepository.rideToDestination();
-        mView.showFragment(new StartTrypFragment(item.getPickupAddress()));
+        mView.showFragment(new StartTrypFragment(rideRepository.getAcceptedRide().getFromAddress()));
     }
 
     @Override
@@ -266,14 +270,9 @@ public class MapPresenter implements MapContract.Presenter, RideRepository.Compa
         if (mView != null) {
             if (rideRepository.getAcceptedRide() != null) {
                 rideRepository.pushDriverLocation(Utill.locationToLatLng(location));
+                rideRepository.compareLocation(Utill.locationToLatLng(location), this);
             }
-//            if (driverRepository.isDriverAvailable()) {
-//
-//            } else {
-//                driverRepository.u
-//                rideRepository.compareLocation(Utill.locationToLatLng(location), MapPresenter.this);
-//            }
-            mView.showCurrentLocation(location);
         }
+        mView.showCurrentLocation(location);
     }
 }

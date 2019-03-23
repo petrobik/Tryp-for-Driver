@@ -68,7 +68,6 @@ import androidx.fragment.app.FragmentManager;
 import dagger.android.support.DaggerAppCompatActivity;
 
 public class MapActivity extends DaggerAppCompatActivity implements MapContract.View, OnMapReadyCallback, NavigationView.OnNavigationItemSelectedListener {
-    boolean isLocationFound = false;
     @Inject
     public MapPresenter presenter;
 
@@ -80,8 +79,6 @@ public class MapActivity extends DaggerAppCompatActivity implements MapContract.
     private Marker clientLocationMarker;
     private DrawerLayout mDrawerLayout;
     private TextView notification;
-    private Location oldLocation;
-    private float angle;
     Bitmap marker_bitmap;
     ImageView menu_icon;
 
@@ -262,6 +259,7 @@ public class MapActivity extends DaggerAppCompatActivity implements MapContract.
                                 ArrayList<LatLng> directionPositionList = leg.getDirectionPoint();
                                 PolylineOptions polylineOptions = DirectionConverter.createPolyline(MapActivity.this, directionPositionList, 5, Color.BLUE);
                                 route = mMap.addPolyline(polylineOptions);
+                                route.setZIndex(12);
                             }
                             Display display = getWindowManager().getDefaultDisplay();
                             Point size = new Point();
@@ -308,6 +306,16 @@ public class MapActivity extends DaggerAppCompatActivity implements MapContract.
     @Override
     public void cleanBackStack() {
         getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+    }
+
+    @Override
+    public void clearMap() {
+        if (clientLocationMarker != null) {
+            clientLocationMarker.remove();
+        }
+        if (route != null) {
+            route.remove();
+        }
     }
 
 
@@ -367,14 +375,15 @@ public class MapActivity extends DaggerAppCompatActivity implements MapContract.
         } else {
             //Animate without Zoom
             currentPos = new LatLng(location.getLatitude(), location.getLongitude());
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(currentPos));
         }
-        if (currentPosMarker != null && currentPosMarker.isVisible()) {
-            currentPosMarker.remove();
+        if (currentPosMarker == null) {
+            currentPosMarker = mMap.addGroundOverlay(new GroundOverlayOptions().position(currentPos, 40f, 20.4f)
+                    .image(BitmapDescriptorFactory.fromResource(R.drawable.marker_car)));
+            currentPosMarker.setZIndex(100);
         }
-        currentPosMarker = mMap.addGroundOverlay(new GroundOverlayOptions().position(currentPos, 40f, 20.4f)
-                .image(BitmapDescriptorFactory.fromResource(R.drawable.marker_car)));
-        isLocationFound = true;
+
+        //Todo migrate to warn memory leak
+        CarAnimation.animateMarkerToGB(currentPosMarker, location, new LatLngInterpolator.Spherical(), new BearingInterpolator.Degree());
 ////        Geocoder geocoder = new Geocoder(MapActivity.this);
 //        List<Address> addressList = null;
 //        try {
@@ -384,11 +393,6 @@ public class MapActivity extends DaggerAppCompatActivity implements MapContract.
 //        }
 //        Log.d("tag", addressList.toString());
         pickUpLocation = currentPos;
-        if (oldLocation != null) {
-            double bearing = angleFromCoordinate(oldLocation.getLatitude(), oldLocation.getLongitude(), location.getLatitude(), location.getLongitude());
-            changeMarkerPosition(bearing);
-        }
-        oldLocation = location;
     }
 
     @Override
@@ -426,33 +430,5 @@ public class MapActivity extends DaggerAppCompatActivity implements MapContract.
 
     }
 
-    private double angleFromCoordinate(double lat1, double long1, double lat2,
-                                       double long2) {
-        double dLon = (long2 - long1);
 
-        double y = Math.sin(dLon) * Math.cos(lat2);
-        double x = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1)
-                * Math.cos(lat2) * Math.cos(dLon);
-
-        double brng = Math.atan2(x, y);
-
-        brng = Math.toDegrees(brng);
-        brng = (brng + 360) % 360;
-        brng = 180 - brng;
-        return brng;
-    }
-
-    private void changeMarkerPosition(double position) {
-        float direction = (float) position;
-        Log.e("tag", "" + direction);
-
-        if (direction == 360.0) {
-            //default
-
-            currentPosMarker.setBearing(angle);
-        } else {
-            currentPosMarker.setBearing(direction);
-            angle = direction;
-        }
-    }
 }

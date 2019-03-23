@@ -9,7 +9,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.rdev.trypfordriver.data.ApiService;
-import com.rdev.trypfordriver.data.model.accept_ride_response.Rides;
 import com.rdev.trypfordriver.data.model.firebase_model.AvailableDriver;
 import com.rdev.trypfordriver.data.model.firebase_model.FirebaseDriver;
 import com.rdev.trypfordriver.data.model.firebase_model.FirebaseRide;
@@ -25,9 +24,9 @@ public class RideRepository implements ValueEventListener {
     ApiService service;
     FirebaseRide acceptedRide;
     int rideStatus = 0;
-    static final int STATUS_RIDE_TO_PICK_UP = 1;
+    public static final int STATUS_RIDE_TO_PICK_UP = 1;
 
-    static final int STATUS_RIDE_TO_DESTINATION = 2;
+    public static final int STATUS_RIDE_TO_DESTINATION = 2;
     private static final int STATUS_RIDE_COMPLETED = 3;
     FirebaseDatabase database;
     private ProvideRideCallback callback;
@@ -153,6 +152,10 @@ public class RideRepository implements ValueEventListener {
         database.getReference("rides/" + firebaseRide.getId()).child("driver").setValue(availableDriver);
     }
 
+    public int getStatus() {
+        return rideStatus;
+    }
+
     public interface ProvideRideCallback {
         void onGetRideRequest(FirebaseRide ridesItem);
 
@@ -166,15 +169,15 @@ public class RideRepository implements ValueEventListener {
         Location to = new Location("locationB");
         if (rideStatus == STATUS_RIDE_TO_PICK_UP) {
             Log.d("tag", "rideStatus == STATUS_RIDE_TO_PICK_UP");
-//            to.setLatitude(acceptedRide.getPickupLat());
-//            to.setLongitude(acceptedRide.getPickupLng());
+            to.setLatitude(acceptedRide.getPickUpLocation().getLat());
+            to.setLongitude(acceptedRide.getPickUpLocation().getLng());
             Log.d("tag", "from.distanceTo(to)" + from.distanceTo(to));
             if (from.distanceTo(to) < 100) {
                 callBack.driverNearPickUp();
             }
         } else if (rideStatus == STATUS_RIDE_TO_DESTINATION) {
-//            to.setLatitude(acceptedRide.getDestinationLat());
-//            to.setLongitude(acceptedRide.getDestinationLng());
+            to.setLatitude(acceptedRide.getDestinationLocation().getLat());
+            to.setLongitude(acceptedRide.getDestinationLocation().getLng());
             Log.d("tag", "rideStatus == STATUS_RIDE_TO_DESTINATION");
             Log.d("tag", "from.distanceTo(to)" + from.distanceTo(to));
             if (from.distanceTo(to) < 100) {

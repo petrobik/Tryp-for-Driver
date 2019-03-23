@@ -10,6 +10,8 @@ import android.widget.TextView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.rdev.trypfordriver.R;
 
+import java.text.DecimalFormat;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
@@ -23,8 +25,9 @@ public class RideCompletedFragment extends Fragment {
     TextView fareTv;
 
     @SuppressLint("ValidFragment")
-    public RideCompletedFragment(String price) {
-        this.price = price;
+    public RideCompletedFragment(double price) {
+        DecimalFormat df = new DecimalFormat("0.00$");
+        this.price = df.format(price);
     }
 
     @Nullable

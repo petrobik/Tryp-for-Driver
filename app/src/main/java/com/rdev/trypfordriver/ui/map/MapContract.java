@@ -23,6 +23,8 @@ public interface MapContract {
         void showToast(String s);
 
         void cleanBackStack();
+
+        void clearMap();
     }
 
     interface Presenter {
