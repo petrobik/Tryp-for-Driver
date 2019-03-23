@@ -5,13 +5,13 @@ public class FirebaseRide {
     String fromAddress;
     String toAddress;
     LatLngWrapper destinationLocation;
-    double fare;
+    float fare;
 
-    public double getFare() {
+    public float getFare() {
         return fare;
     }
 
-    public void setFare(double fare) {
+    public void setFare(float fare) {
         this.fare = fare;
     }
 

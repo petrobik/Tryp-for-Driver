@@ -76,7 +76,6 @@ public class MapActivity extends DaggerAppCompatActivity implements MapContract.
     private GoogleMap mMap;
     FragmentManager fm;
     public LatLng pickUpLocation;
-    AdressListFragment listFragment;
     private Marker clientLocationMarker;
     private DrawerLayout mDrawerLayout;
     private TextView notification;
@@ -121,27 +120,6 @@ public class MapActivity extends DaggerAppCompatActivity implements MapContract.
 
 //        notification = (TextView) MenuItemCompat.getActionProvider(navigationView.getMenu().getItem(R.id.action_notification));
 
-        mDrawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
-            @Override
-            public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
-
-            }
-
-            @Override
-            public void onDrawerOpened(@NonNull View drawerView) {
-
-            }
-
-            @Override
-            public void onDrawerClosed(@NonNull View drawerView) {
-
-            }
-
-            @Override
-            public void onDrawerStateChanged(int newState) {
-
-            }
-        });
         int height = 50;
         int width = 90;
         BitmapDrawable bitmapdraw = (BitmapDrawable) getResources().getDrawable(R.drawable.marker_car);
@@ -315,33 +293,8 @@ public class MapActivity extends DaggerAppCompatActivity implements MapContract.
         finish();
     }
 
-    @Override
-    public void setAvailable(boolean driverAvailable) {
-
-    }
-
-
-//    public void pickAdress() {
-//        listFragment = new AdressListFragment();
-//        fm.beginTransaction().replace(R.id.container, listFragment)
-//                .addToBackStack("adress").commit();
-//    }
 
     Polyline route;
-
-//    public void onDestinationPicked(final TripPlace destination) {
-//        if (pickAdressMarker != null && pickAdressMarker.isVisible()) {
-//            pickAdressMarker.remove();
-//        }
-//        if (route != null && route.isVisible()) {
-//            route.remove();
-//        }
-//        pickAdressMarker = mMap.addMarker(new MarkerOptions().position(destination.getCoord())
-//                .icon(BitmapDescriptorFactory.fromResource(R.drawable.destination_marker)));
-//        type = TYPE_VIEWER;
-//        fm.beginTransaction().replace(R.id.container, new TripFragment(pickUpLocation))
-//                .addToBackStack("dest_pick").commit();
-//    }
 
     public void zoomToCurrentLocation() {
         LatLng currentPos = new LatLng(pickUpLocation.latitude, pickUpLocation.longitude);
@@ -387,21 +340,13 @@ public class MapActivity extends DaggerAppCompatActivity implements MapContract.
 
         //Todo migrate to warn memory leak
         CarAnimation.animateMarkerToGB(currentPosMarker, location, new LatLngInterpolator.Spherical(), new BearingInterpolator.Degree());
-////        Geocoder geocoder = new Geocoder(MapActivity.this);
-//        List<Address> addressList = null;
-//        try {
-//            addressList = geocoder.getFromLocation(currentPos.latitude, currentPos.longitude, 1);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        Log.d("tag", addressList.toString());
         pickUpLocation = currentPos;
     }
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         presenter.detachView();
+        super.onDestroy();
     }
 
     @Override
@@ -431,10 +376,4 @@ public class MapActivity extends DaggerAppCompatActivity implements MapContract.
         mDrawerLayout.closeDrawer(Gravity.LEFT);
         return true;
     }
-
-    public void removeTrackAndCustomerPosition() {
-
-    }
-
-
 }

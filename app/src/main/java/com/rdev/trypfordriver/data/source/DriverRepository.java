@@ -150,6 +150,10 @@ public class DriverRepository implements ValueEventListener {
         currentDriverReference.child("rideId").removeValue();
     }
 
+    public void deleteAttachedRide() {
+        currentDriverReference.child("rideId").removeValue();
+    }
+
     private static class insertAsyncTask extends AsyncTask<CachedDriver, Void, Void> {
 
         private DriverDao mAsyncTaskDao;

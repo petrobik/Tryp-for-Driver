@@ -42,6 +42,13 @@ public class FakeLocationRepository {
         fakeLocations.add(new LatLng(49.875833, 24.007883));
         fakeLocations.add(new LatLng(49.876124, 24.007626));
         fakeLocations.add(new LatLng(49.876338, 24.007014));
+        fakeLocations.add(new LatLng(49.875758, 24.009120));
+        fakeLocations.add(new LatLng(49.874557, 24.011803));
+        fakeLocations.add(new LatLng(49.873109, 24.016303));
+        fakeLocations.add(new LatLng(49.870773, 24.018719));
+        fakeLocations.add(new LatLng(49.869046, 24.023079));
+        fakeLocations.add(new LatLng(49.866744, 24.024549));
+        fakeLocations.add(new LatLng(49.864795, 24.025538));
         handler = new Handler();
     }
 

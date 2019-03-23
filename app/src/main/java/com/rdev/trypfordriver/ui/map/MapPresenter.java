@@ -90,6 +90,7 @@ public class MapPresenter implements MapContract.Presenter, RideRepository.Compa
     @Override
     public void detachView() {
         this.mView = null;
+        driverRepository.setDriverAvailable(false);
     }
 
     @Override
@@ -162,6 +163,7 @@ public class MapPresenter implements MapContract.Presenter, RideRepository.Compa
         FirebaseRide acceptedRide = rideRepository.getAcceptedRide();
         mView.drawRoute(acceptedRide.getPickUpLocation().getLocation(),
                 acceptedRide.getDestinationLocation().getLocation());
+        rideRepository.updateRideStatus(100);
         mView.showFragment(new RideFragment(acceptedRide.getFromAddress(), acceptedRide.getToAddress()));
     }
 
@@ -169,6 +171,8 @@ public class MapPresenter implements MapContract.Presenter, RideRepository.Compa
     public void onStopTrypClick() {
         Log.d("tag", "onStopTrypClick");
         rideRepository.rideCompleted();
+        rideRepository.updateRideStatus(200);
+        driverRepository.deleteAttachedRide();
         mView.showFragment(new RideCompletedFragment(rideRepository.getAcceptedRide().getFare()));
     }
 
@@ -187,9 +191,9 @@ public class MapPresenter implements MapContract.Presenter, RideRepository.Compa
 
     @Override
     public void onFareCalculated(double totalDistance) {
-        if (rideRepository.getAcceptedRide() != null) {
-            rideRepository.getAcceptedRide().setFare(totalDistance);
-        }
+//        if (rideRepository.getAcceptedRide() != null) {
+//            rideRepository.getAcceptedRide().setFare(totalDistance);
+//        }
     }
 
     @Override
@@ -225,49 +229,6 @@ public class MapPresenter implements MapContract.Presenter, RideRepository.Compa
         Log.d("tag", "driverNearDestination");
         mView.showFragment(new StopTrypFragment());
     }
-
-//    @Override
-//    public void onFindOnDemansRides(List<RidesItem> rides) {
-//        Log.d("tag", "onFindOnDemansRides");
-//        item = rides.get(rides.size() - 1);
-//        String updatedAt = item.getUpdatedAt();
-//        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//        Date date = null;
-//        try {
-//            date = format.parse(updatedAt);
-//            System.out.println(date);
-//        } catch (ParseException e) {
-//            Log.d("tag", e.toString());
-//            e.printStackTrace();
-//        }
-//        TimeZone fromTimezone = TimeZone.getDefault();
-//        TimeZone toTimezone = TimeZone.getTimeZone("UTC");
-//
-//        long fromOffset = fromTimezone.getOffset(calendar.getTimeInMillis());
-//        long toOffset = toTimezone.getOffset(calendar.getTimeInMillis());
-//
-//        long convertedTime = System.currentTimeMillis() - (fromOffset - toOffset);
-//        calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
-//        if (convertedTime - date.getTime() < 5 * 60 * 1000) {
-//            if (mView != null) {
-//                mView.drawRoute(Utill.locationToLatLng(locationRepository.getCachedLocation()),
-//                        new LatLng(item.getPickupLat(), item.getPickupLng()));
-//                routeToClientFragment = new RouteToClientFragment(item.getPickupAddress());
-//                mView.showFragment(routeToClientFragment);
-//            }
-//        } else {
-//            handler.postDelayed(() -> {
-//                if (driverRepository.isDriverAvailable()) {
-//                    rideRepository.driver_get_ondemand_rides("18405", MapPresenter.this);
-//                }
-//            }, 10000);
-//        }
-//    }
-//
-//    @Override
-//    public void onError(String error) {
-//
-//    }
 
     @Override
     public void onLocationChanged(Location location) {

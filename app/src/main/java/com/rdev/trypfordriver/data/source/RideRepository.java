@@ -109,14 +109,7 @@ public class RideRepository implements ValueEventListener {
 //                callBack.onError(t.getMessage());
 //            }
 //        });
-//        //TODO TEST
-//        acceptedRide = new Rides();
-//        acceptedRide.setUpdatedAt("2019-03-16 16:49:40");
-//        acceptedRide.setRideRequestId("sgdgsgds");
-//        acceptedRide.setPickupAddress("Pick Up adress");
-//        acceptedRide.setDestinationAddress("Destination adress");
-////                    databaseReference = database.getReference("rides/" + acceptedRide.getRideRequestId());
-////
+//
 //        callBack.onRideAccepted(acceptedRide);
 
     public void rideToPickUp() {
@@ -154,6 +147,10 @@ public class RideRepository implements ValueEventListener {
 
     public int getStatus() {
         return rideStatus;
+    }
+
+    public void updateRideStatus(int i) {
+        database.getReference("rides/" + firebaseRide.getId()).child("status").setValue(i);
     }
 
     public interface ProvideRideCallback {

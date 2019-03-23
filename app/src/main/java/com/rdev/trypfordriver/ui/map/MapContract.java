@@ -29,8 +29,6 @@ public interface MapContract {
         void clearMap();
 
         void openLoginActivity();
-
-        void setAvailable(boolean driverAvailable);
     }
 
     interface Presenter {
