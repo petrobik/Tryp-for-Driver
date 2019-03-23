@@ -8,7 +8,6 @@
     <string name="we_ve_sent_you_a_authentication_code">We’ve sent you a authentication code</string>
     <string name="tryp_prime">Tryp Prime</string>
     <string name="create_account">Create Account</string>
-    <string name="send_code">Send Code</string>
     <string name="don_t_have_an_account">Don’t have an account?</string>
     <string name="sign_up">Sign Up</string>
     <string name="where_to">Where to?</string>
@@ -51,14 +50,10 @@
     <string name="action_notification">Notification</string>
     <string name="action_expense_tracking">Expense Tracking</string>
     <string name="action_emergency_contact">Emergency Contact</string>
-    <string name="action_promotion">Promotion</string>
     <string name="action_invite_friend">Invite Friend</string>
     <string name="action_help">Help</string>
     <string name="action_about_us">About Us</string>
     <string name="action_logout">Logout</string>
-    <string name="tryp_prime_sum_10_20">$10 - $20</string>
-    <string name="confirm_booking_button">Confirm Booking</string>
-    <string name="screen7_title">Where To?</string>
 
     <string name="screen27_title">Expense Tracking</string>
     <string name="oil_change">Oil Change</string>

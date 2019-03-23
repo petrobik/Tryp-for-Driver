@@ -88,8 +88,6 @@ public class MapActivity extends DaggerAppCompatActivity implements MapContract.
         setContentView(R.layout.activity_map);
         presenter.attachView(this);
         Intent intent = getIntent();
-        String driverId = intent.getStringExtra("id");
-        presenter.setDriverId(driverId);
         Places.initialize(getApplicationContext(), "AIzaSyC41CJUJMGe_9n44zKA0Jk1BAQ_pWp_p1o");
 
         if (Build.VERSION.SDK_INT >= 23) {

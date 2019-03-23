@@ -20,13 +20,13 @@ public class FirebaseDriver {
 
     private String type;
 
+    private String driverId;
     private FirebaseVehicle vehicle;
+
 
     public String getDriverId() {
         return driverId;
     }
-
-    private String driverId;
 
     public FirebaseDriver() {
     }

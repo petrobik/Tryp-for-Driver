@@ -63,7 +63,5 @@ public interface MapContract {
         void onFareCalculated(double totalDistance);
 
         void onSubmitFeedBack();
-
-        void setDriverId(String driverId);
     }
 }

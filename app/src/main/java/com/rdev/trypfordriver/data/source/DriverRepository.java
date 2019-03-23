@@ -1,5 +1,6 @@
 package com.rdev.trypfordriver.data.source;
 
+import android.os.AsyncTask;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -8,6 +9,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.rdev.trypfordriver.data.localDb.CachedDriver;
+import com.rdev.trypfordriver.data.localDb.DriverDao;
+import com.rdev.trypfordriver.data.localDb.DriverRoomDatabase;
 import com.rdev.trypfordriver.data.model.firebase_model.AvailableDriver;
 import com.rdev.trypfordriver.data.model.firebase_model.FirebaseDriver;
 import com.rdev.trypfordriver.data.model.firebase_model.FirebaseVehicle;
@@ -17,6 +21,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
 
 @Singleton
 public class DriverRepository implements ValueEventListener {
@@ -30,10 +35,18 @@ public class DriverRepository implements ValueEventListener {
     FirebaseDriver driver;
     AvailableDriver availableDriver;
     LatLngWrapper wrapper;
+    DriverRoomDatabase driverRoomDatabase;
+    DriverDao driverDao;
+    LiveData<CachedDriver> cachedDriverLiveData;
+    CachedDriver cachedDriver;
+
 
     @Inject
-    public DriverRepository(FirebaseDatabase database) {
+    public DriverRepository(FirebaseDatabase database, DriverRoomDatabase db) {
         this.database = database;
+        this.driverRoomDatabase = db;
+        driverDao = driverRoomDatabase.driverDao();
+        cachedDriverLiveData = driverDao.getCurrentDriver();
         availableDriversReference = database.getReference("available_drivers");
     }
 
@@ -64,8 +77,7 @@ public class DriverRepository implements ValueEventListener {
         return driverId;
     }
 
-    public void setId(String id) {
-        driverId = id;
+    public void initModels(String id) {
         if (availableDriver == null) {
             availableDriver = new AvailableDriver();
         }
@@ -77,7 +89,7 @@ public class DriverRepository implements ValueEventListener {
 
     @Override
     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-        Log.d("tag", "onDataChange in setId");
+        Log.d("tag", "onDataChange in initModels");
         driver = dataSnapshot.getValue(FirebaseDriver.class);
         //Check if driver model present in direBase
         if (driver != null) {
@@ -106,5 +118,37 @@ public class DriverRepository implements ValueEventListener {
     @Override
     public void onCancelled(@NonNull DatabaseError databaseError) {
         Log.d("tag", "onCancelled" + databaseError.getDetails());
+    }
+
+    public LiveData<CachedDriver> getCachedDriverLiveData() {
+        return cachedDriverLiveData;
+    }
+
+    public void insertCachedDriver(CachedDriver cachedDriver) {
+        this.cachedDriver = cachedDriver;
+        driverId = Integer.toString(cachedDriver.getDriverId());
+        initModels(driverId);
+        new insertAsyncTask(driverDao).execute(cachedDriver);
+    }
+
+    public void setDriver(CachedDriver cachedDriver) {
+        this.cachedDriver = cachedDriver;
+        driverId = Integer.toString(cachedDriver.getDriverId());
+        initModels(driverId);
+    }
+
+    private static class insertAsyncTask extends AsyncTask<CachedDriver, Void, Void> {
+
+        private DriverDao mAsyncTaskDao;
+
+        insertAsyncTask(DriverDao dao) {
+            mAsyncTaskDao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(final CachedDriver... params) {
+            mAsyncTaskDao.insert(params[0]);
+            return null;
+        }
     }
 }

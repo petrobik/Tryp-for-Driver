@@ -44,7 +44,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.0.0-rc01'
     implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
     implementation 'com.github.angads25:toggle:1.1.0'
-    implementation 'com.android.support:multidex:1.0.3'
+    //Retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.5.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.12.1'
     implementation 'com.squareup.okhttp3:okhttp-urlconnection:3.6.0'
@@ -52,13 +52,15 @@ dependencies {
     implementation 'com.google.android.libraries.places:places:1.0.0'
     implementation 'com.github.bumptech.glide:glide:4.9.0'
 
+    //Dagger2
     implementation 'com.google.dagger:dagger:2.21'
     implementation 'com.google.dagger:dagger-android-support:2.21'
+    annotationProcessor 'com.google.dagger:dagger-android-processor:2.21'
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.21'
+    //Firebase
     implementation 'com.google.firebase:firebase-core:16.0.7'
     implementation 'com.google.firebase:firebase-database:16.1.0'
     implementation 'com.crashlytics.sdk.android:crashlytics:2.9.9'
-    annotationProcessor 'com.google.dagger:dagger-android-processor:2.21'
-    annotationProcessor 'com.google.dagger:dagger-compiler:2.21'
 
     implementation 'de.hdodenhof:circleimageview:3.0.0'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0-alpha'
@@ -73,5 +75,14 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.1.0-alpha4'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0-alpha4'
     implementation 'androidx.cardview:cardview:1.0.0'
+
+    // Room components
+    implementation "android.arch.persistence.room:runtime:$rootProject.roomVersion"
+    annotationProcessor "android.arch.persistence.room:compiler:$rootProject.roomVersion"
+    androidTestImplementation "android.arch.persistence.room:testing:$rootProject.roomVersion"
+
+// Lifecycle components
+    implementation "android.arch.lifecycle:extensions:$rootProject.archLifecycleVersion"
+    annotationProcessor "android.arch.lifecycle:compiler:$rootProject.archLifecycleVersion"
 }
 apply plugin: 'com.google.gms.google-services'

@@ -13,12 +13,16 @@ import android.view.WindowManager;
 import com.crashlytics.android.Crashlytics;
 import com.google.firebase.FirebaseApp;
 import com.rdev.trypfordriver.R;
+import com.rdev.trypfordriver.data.source.DriverRepository;
 import com.rdev.trypfordriver.ui.createAccount.CreateActivity;
 import com.rdev.trypfordriver.ui.login.LoginActivity;
+
+import javax.inject.Inject;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.app.ActivityCompat;
+import dagger.android.support.DaggerAppCompatActivity;
 import io.fabric.sdk.android.Fabric;
 
 public class WelcomeActivity extends AppCompatActivity implements View.OnClickListener {

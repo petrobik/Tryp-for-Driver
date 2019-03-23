@@ -50,7 +50,7 @@ public class LocationRepository {
     public void registerLocationListener(final ProvideLocationCallback callback) {
         callback.onLocationChanged(cachedLocation);
         locationManager.requestLocationUpdates(
-                LocationManager.GPS_PROVIDER, 1000, 5, new LocationListener() {
+                LocationManager.GPS_PROVIDER, 2000, 5, new LocationListener() {
                     @Override
                     public void onLocationChanged(Location location) {
                         Log.d("tag", "onLocationChanged");

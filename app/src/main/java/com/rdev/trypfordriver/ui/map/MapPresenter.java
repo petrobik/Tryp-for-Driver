@@ -9,7 +9,6 @@ import com.rdev.trypfordriver.data.model.firebase_model.AvailableDriver;
 import com.rdev.trypfordriver.data.model.firebase_model.FirebaseRide;
 import com.rdev.trypfordriver.data.model.on_demand_rides.RidesItem;
 import com.rdev.trypfordriver.data.source.DriverRepository;
-import com.rdev.trypfordriver.data.source.FakeLocationRepository;
 import com.rdev.trypfordriver.data.source.LocationRepository;
 import com.rdev.trypfordriver.data.source.RideRepository;
 import com.rdev.trypfordriver.di.ActivityScoped;
@@ -30,7 +29,7 @@ import javax.inject.Inject;
 @ActivityScoped
 public class MapPresenter implements MapContract.Presenter, RideRepository.CompareLocationCallBack, LocationRepository.ProvideLocationCallback {
     MapContract.View mView;
-    FakeLocationRepository locationRepository;
+    LocationRepository locationRepository;
     RidesFragment ridesFragment;
     RouteToClientFragment routeToClientFragment;
     RidesItem item;
@@ -41,7 +40,7 @@ public class MapPresenter implements MapContract.Presenter, RideRepository.Compa
 
 
     @Inject
-    public MapPresenter(FakeLocationRepository locationRepository, RideRepository rideRepository, DriverRepository driverRepository) {
+    public MapPresenter(LocationRepository locationRepository, RideRepository rideRepository, DriverRepository driverRepository) {
         this.locationRepository = locationRepository;
         this.rideRepository = rideRepository;
         this.driverRepository = driverRepository;
@@ -202,10 +201,6 @@ public class MapPresenter implements MapContract.Presenter, RideRepository.Compa
         mView.showFragment(new ReadyToTripFragment());
     }
 
-    @Override
-    public void setDriverId(String driverId) {
-        driverRepository.setId(driverId);
-    }
 
     @Override
     public void driverNearPickUp() {

@@ -1,7 +1,9 @@
 package com.rdev.trypfordriver.di;
 
+import com.rdev.trypfordriver.ui.login.LoginActivity;
 import com.rdev.trypfordriver.ui.map.MapActivity;
 import com.rdev.trypfordriver.ui.map.MapModule;
+import com.rdev.trypfordriver.ui.welcome.SplashActivity;
 
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;
@@ -18,5 +20,13 @@ public abstract class ActivityBindingModule {
     @ActivityScoped
     @ContributesAndroidInjector(modules = MapModule.class)
     abstract MapActivity tasksActivity();
+
+    @ActivityScoped
+    @ContributesAndroidInjector(modules = MapModule.class)
+    abstract SplashActivity splashActivity();
+
+    @ActivityScoped
+    @ContributesAndroidInjector(modules = MapModule.class)
+    abstract LoginActivity loginActivity();
 
 }

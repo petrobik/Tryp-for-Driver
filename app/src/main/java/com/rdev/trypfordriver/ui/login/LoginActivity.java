@@ -12,18 +12,22 @@ import android.widget.Toast;
 
 import com.rdev.trypfordriver.R;
 import com.rdev.trypfordriver.data.ApiService;
+import com.rdev.trypfordriver.data.localDb.CachedDriver;
 import com.rdev.trypfordriver.data.model.DriverLoginBody;
 import com.rdev.trypfordriver.data.model.LoginModel;
 import com.rdev.trypfordriver.data.model.UserPhoneNumber;
 import com.rdev.trypfordriver.data.model.driver_login_response.Driver;
 import com.rdev.trypfordriver.data.model.driver_login_response.DriverLoginResponse;
+import com.rdev.trypfordriver.data.source.DriverRepository;
 import com.rdev.trypfordriver.ui.map.MapActivity;
 
 import java.net.CookieHandler;
 import java.net.CookieManager;
 
-import androidx.appcompat.app.AppCompatActivity;
+import javax.inject.Inject;
+
 import androidx.fragment.app.FragmentManager;
+import dagger.android.support.DaggerAppCompatActivity;
 import okhttp3.JavaNetCookieJar;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -33,12 +37,14 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends DaggerAppCompatActivity {
     FragmentManager fm;
     Retrofit retrofit;
     ApiService apiService;
     LoginModel loginModel;
     UserPhoneNumber number;
+    @Inject
+    DriverRepository driverRepository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +86,15 @@ public class LoginActivity extends AppCompatActivity {
                 public void onResponse(Call<DriverLoginResponse> call, Response<DriverLoginResponse> response) {
                     if (response.body().getData() != null) {
                         Driver driver = response.body().getData().getDriver();
-                        startActivity(new Intent(LoginActivity.this, MapActivity.class).putExtra("id", Integer.toString(driver.getId())));
+                        CachedDriver cachedDriver = new CachedDriver();
+                        cachedDriver.setCategory("");
+                        cachedDriver.setDriverId(driver.getId());
+                        cachedDriver.setFirstName(driver.getFirstName());
+                        cachedDriver.setLastName(driver.getLastName());
+                        cachedDriver.setPhoneNumber(driver.getMobilePhoneNumber());
+                        driverRepository.insertCachedDriver(cachedDriver);
+
+                        startActivity(new Intent(LoginActivity.this, MapActivity.class));
                     } else {
                         Toast.makeText(LoginActivity.this, "Error", Toast.LENGTH_SHORT).show();
                     }

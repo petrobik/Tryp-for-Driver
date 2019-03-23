@@ -3,9 +3,9 @@ package com.rdev.trypfordriver.ui.map;
 import android.content.Context;
 import android.location.LocationManager;
 
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.FirebaseDatabase;
 import com.rdev.trypfordriver.data.ApiService;
+import com.rdev.trypfordriver.data.localDb.DriverRoomDatabase;
 
 import java.net.CookieHandler;
 import java.net.CookieManager;
@@ -58,4 +58,12 @@ public abstract class MapRepositoryModule {
     static FirebaseDatabase provideFirebaseDataBase() {
         return FirebaseDatabase.getInstance();
     }
+
+    @Singleton
+    @Provides
+    static DriverRoomDatabase provideRoomDatabase(Context context) {
+        return DriverRoomDatabase.getDatabase(context);
+    }
+
+
 }

@@ -9,10 +9,19 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import com.rdev.trypfordriver.R;
+import com.rdev.trypfordriver.data.localDb.CachedDriver;
+import com.rdev.trypfordriver.data.source.DriverRepository;
+import com.rdev.trypfordriver.ui.map.MapActivity;
 
-import androidx.appcompat.app.AppCompatActivity;
+import javax.inject.Inject;
 
-public class SplashActivity extends AppCompatActivity {
+import androidx.lifecycle.Observer;
+import dagger.android.support.DaggerAppCompatActivity;
+
+public class SplashActivity extends DaggerAppCompatActivity {
+    @Inject
+    DriverRepository driverRepository;
+    CachedDriver cachedDriver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,10 +31,22 @@ public class SplashActivity extends AppCompatActivity {
             Window w = getWindow();
             w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         }
+        driverRepository.getCachedDriverLiveData().observe(this, new Observer<CachedDriver>() {
+            @Override
+            public void onChanged(CachedDriver cachedDriver) {
+                SplashActivity.this.cachedDriver = cachedDriver;
+            }
+        });
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent intent = new Intent(SplashActivity.this, WelcomeActivity.class);
+                Intent intent;
+                if (cachedDriver != null) {
+                    driverRepository.setDriver(cachedDriver);
+                    intent = new Intent(SplashActivity.this, MapActivity.class);
+                } else {
+                    intent = new Intent(SplashActivity.this, WelcomeActivity.class);
+                }
                 startActivity(intent);
                 finish();
             }
