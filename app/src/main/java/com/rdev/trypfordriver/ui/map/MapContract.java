@@ -56,13 +56,13 @@ public interface MapContract {
 
         void onStopTrypClick();
 
-        void onRidePriceClick();
+        void onShowFeedbackFragment();
 
         void onOtpEntered();
 
         void onFareCalculated(double totalDistance);
 
-        void onSubmitFeedBack();
+        void onSubmitFeedBack(String s, float rating);
 
         void onLogoutClick();
 

@@ -49,7 +49,6 @@ import com.google.android.libraries.places.api.Places;
 import com.google.android.material.navigation.NavigationView;
 import com.rdev.trypfordriver.R;
 import com.rdev.trypfordriver.ui.CastomerActivity;
-import com.rdev.trypfordriver.ui.autocomplete.AdressListFragment;
 import com.rdev.trypfordriver.ui.expense_tracking.ExpenseActivity;
 import com.rdev.trypfordriver.ui.ready_to_trip.ReadyToTripFragment;
 import com.rdev.trypfordriver.ui.report.ReportActivity;
@@ -193,9 +192,6 @@ public class MapActivity extends DaggerAppCompatActivity implements MapContract.
 
     @Override
     public void popBackStack() {
-        if (route != null && route.isVisible()) {
-            route.remove();
-        }
         if (fm.getBackStackEntryCount() > 0) {
             fm.popBackStack();
         } else {

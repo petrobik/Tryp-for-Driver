@@ -1,5 +1,6 @@
 package com.rdev.trypfordriver.ui.stop_tryp;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,17 +16,25 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+@SuppressLint("ValidFragment")
 public class StopTrypFragment extends Fragment {
     Button stopTrypBtn;
     String customerLocation;
     TextView customer_location_tv;
     ImageButton backBtn;
+    TextView adress_tv;
+
+    @SuppressLint("ValidFragment")
+    public StopTrypFragment(String customerLocation) {
+        this.customerLocation = customerLocation;
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.stop_tryp_fragment, container, false);
         stopTrypBtn = v.findViewById(R.id.stop_tryp_btn);
+        adress_tv = v.findViewById(R.id.adress_tv);
         customer_location_tv = v.findViewById(R.id.adress_tv);
         stopTrypBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -40,6 +49,7 @@ public class StopTrypFragment extends Fragment {
                 ((MapActivity) getActivity()).presenter.onBackClick();
             }
         });
+        adress_tv.setText(customerLocation);
         return v;
     }
 }

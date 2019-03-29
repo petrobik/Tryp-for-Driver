@@ -147,6 +147,7 @@ public class DriverRepository implements ValueEventListener {
     }
 
     public void declineRideRequest() {
+
         currentDriverReference.child("rideId").removeValue();
     }
 

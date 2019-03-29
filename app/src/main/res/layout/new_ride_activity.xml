@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -11,9 +12,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
         app:cardCornerRadius="10dp"
         app:cardElevation="4dp"
-        android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toTopOf="@+id/accept_btn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -101,38 +102,33 @@
 
     <Button
         android:id="@+id/decline_btn"
-        android:layout_width="0dp"
+        android:layout_width="130dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
+        android:layout_marginEnd="16dp"
         android:background="@drawable/rounded_button_white"
+
         android:text="Decline"
         android:textAllCaps="true"
         android:textColor="#4F4F4F"
         android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="@+id/back_btn"
-        app:layout_constraintEnd_toStartOf="@+id/accept_btn"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/back_btn"
-        app:layout_constraintTop_toTopOf="@+id/back_btn" />
+        app:layout_constraintBottom_toTopOf="@+id/line_layout"
+        app:layout_constraintEnd_toStartOf="@+id/accept_btn" />
 
 
     <Button
         android:id="@+id/accept_btn"
-        android:layout_width="0dp"
+        android:layout_width="130dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
+        android:layout_marginEnd="16dp"
         android:background="@drawable/rounded_button_blue"
         android:text="Accept"
         android:textAllCaps="true"
         android:textColor="#ffffff"
         android:textSize="16sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/decline_btn"
+        app:layout_constraintBottom_toTopOf="@+id/line_layout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/decline_btn"
-        app:layout_constraintTop_toTopOf="@+id/decline_btn" />
+        tools:layout_editor_absoluteY="635dp" />
 
     <ImageButton
         style="@style/LocationBtnStyle"
@@ -143,23 +139,6 @@
         app:layout_constraintBottom_toTopOf="@+id/materialCardView16"
         app:layout_constraintEnd_toEndOf="parent" />
 
-
-    <ImageButton
-        android:id="@+id/back_btn"
-        android:layout_width="@dimen/map_navigation_btn_size"
-        android:layout_height="@dimen/map_navigation_btn_size"
-        android:layout_marginStart="32dp"
-        android:background="@drawable/circle_button"
-        android:clickable="true"
-        android:elevation="5dp"
-        android:focusable="true"
-        android:foreground="?attr/selectableItemBackgroundBorderless"
-        android:src="@drawable/ic_keyboard_backspace_black_24dp"
-        app:layout_constraintBottom_toTopOf="@+id/line_layout"
-        app:layout_constraintEnd_toStartOf="@+id/decline_btn"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintHorizontal_chainStyle="spread_inside"
-        app:layout_constraintStart_toStartOf="parent" />
 
     <LinearLayout
         android:id="@+id/line_layout"

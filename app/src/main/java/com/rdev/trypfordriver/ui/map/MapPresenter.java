@@ -39,6 +39,11 @@ public class MapPresenter implements MapContract.Presenter, RideRepository.Compa
     DriverRepository driverRepository;
 
 
+    public static int STATUS_RIDE_COMPLETED = 200;
+    public static int STATUS_RIDE_STARTED = 100;
+    public static int STATUS_DRIVER_ARRIVED_TO_CLIENT = 150;
+
+
     @Inject
     public MapPresenter(FakeLocationRepository locationRepository, RideRepository rideRepository, DriverRepository driverRepository) {
         this.locationRepository = locationRepository;
@@ -56,9 +61,10 @@ public class MapPresenter implements MapContract.Presenter, RideRepository.Compa
 
     @Override
     public void onDeclineRequest() {
-        driverRepository.declineRideRequest();
         mView.popBackStack();
         mView.clearMap();
+        rideRepository.updateRideStatus(50);
+        driverRepository.declineRideRequest();
     }
 
     @Override
@@ -103,9 +109,9 @@ public class MapPresenter implements MapContract.Presenter, RideRepository.Compa
                 @Override
                 public void onGetRideRequest(FirebaseRide ridesItem) {
                     if (mView != null) {
-                        mView.drawRoute(locationRepository.getCachedLatLng(), ridesItem.getPickUpLocation().getLocation());
                         routeToClientFragment = new RouteToClientFragment(ridesItem.getFromAddress());
                         mView.showFragment(routeToClientFragment);
+                        mView.drawRoute(locationRepository.getCachedLatLng(), ridesItem.getPickUpLocation().getLocation());
                     }
                 }
 
@@ -163,7 +169,7 @@ public class MapPresenter implements MapContract.Presenter, RideRepository.Compa
         FirebaseRide acceptedRide = rideRepository.getAcceptedRide();
         mView.drawRoute(acceptedRide.getPickUpLocation().getLocation(),
                 acceptedRide.getDestinationLocation().getLocation());
-        rideRepository.updateRideStatus(100);
+        rideRepository.updateRideStatus(STATUS_RIDE_STARTED);
         mView.showFragment(new RideFragment(acceptedRide.getFromAddress(), acceptedRide.getToAddress()));
     }
 
@@ -171,22 +177,22 @@ public class MapPresenter implements MapContract.Presenter, RideRepository.Compa
     public void onStopTrypClick() {
         Log.d("tag", "onStopTrypClick");
         rideRepository.rideCompleted();
-        rideRepository.updateRideStatus(200);
+        rideRepository.updateRideStatus(STATUS_RIDE_COMPLETED);
         driverRepository.deleteAttachedRide();
         mView.showFragment(new RideCompletedFragment(rideRepository.getAcceptedRide().getFare()));
     }
 
 
     @Override
-    public void onRidePriceClick() {
-        Log.d("tag", "onRidePriceClick");
+    public void onShowFeedbackFragment() {
+        Log.d("tag", "onShowFeedbackFragment");
         mView.showFragment(new LeaveFeedbackFragment());
     }
 
     @Override
     public void onOtpEntered() {
         Log.d("tag", "onOtpEntered");
-        mView.showFragment(new StartTrypFragment(item.getPickupAddress()));
+        mView.showFragment(new StartTrypFragment(rideRepository.getAcceptedRide().getFromAddress()));
     }
 
     @Override
@@ -197,7 +203,9 @@ public class MapPresenter implements MapContract.Presenter, RideRepository.Compa
     }
 
     @Override
-    public void onSubmitFeedBack() {
+    public void onSubmitFeedBack(String s, float rating) {
+        rideRepository.leaveFeedback(s, rating);
+        rideRepository.setAcceptedRide(null);
         mView.cleanBackStack();
         mView.clearMap();
         mView.showFragment(new ReadyToTripFragment());
@@ -221,13 +229,14 @@ public class MapPresenter implements MapContract.Presenter, RideRepository.Compa
     public void driverNearPickUp() {
         Log.d("tag", "driverNearPickUp");
         rideRepository.rideToDestination();
+        rideRepository.updateRideStatus(STATUS_DRIVER_ARRIVED_TO_CLIENT);
         mView.showFragment(new StartTrypFragment(rideRepository.getAcceptedRide().getFromAddress()));
     }
 
     @Override
     public void driverNearDestination() {
         Log.d("tag", "driverNearDestination");
-        mView.showFragment(new StopTrypFragment());
+        mView.showFragment(new StopTrypFragment(rideRepository.getAcceptedRide().getToAddress()));
     }
 
     @Override

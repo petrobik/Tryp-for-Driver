@@ -7,11 +7,15 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 import com.rdev.trypfordriver.data.ApiService;
+import com.rdev.trypfordriver.data.model.FirebaseFeedback;
 import com.rdev.trypfordriver.data.model.firebase_model.AvailableDriver;
 import com.rdev.trypfordriver.data.model.firebase_model.FirebaseDriver;
 import com.rdev.trypfordriver.data.model.firebase_model.FirebaseRide;
+
+import java.util.ArrayList;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -33,6 +37,10 @@ public class RideRepository implements ValueEventListener {
 
     public FirebaseRide getFirebaseRide() {
         return firebaseRide;
+    }
+
+    public void setFirebaseRide(FirebaseRide firebaseRide) {
+        this.firebaseRide = firebaseRide;
     }
 
     FirebaseRide firebaseRide;
@@ -69,7 +77,7 @@ public class RideRepository implements ValueEventListener {
         });
     }
 
-//    public void driver_get_ondemand_rides(String s, final ProvideOnDemandsRidesCallback callback) {
+    //    public void driver_get_ondemand_rides(String s, final ProvideOnDemandsRidesCallback callback) {
 //        Log.d("tag", "driver_get_ondemand_rides");
 //        service.driver_get_ondemand_rides(s).enqueue(new Callback<OnDemanRidesResponse>() {
 //            @Override
@@ -83,11 +91,27 @@ public class RideRepository implements ValueEventListener {
 //            }
 //        });
 //    }
+    ArrayList<FirebaseFeedback> firebaseFeedbacks;
 
     public void acceptRide(AvailableDriver availableDriver) {
         this.availableDriver = availableDriver;
         firebaseRide.setDriver(availableDriver);
         this.acceptedRide = firebaseRide;
+        firebaseFeedbacks = new ArrayList<>();
+        database.getReference("clientsDb/" + firebaseRide.getClientId()).child("feedbacks").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                GenericTypeIndicator<ArrayList<FirebaseFeedback>> t = new GenericTypeIndicator<ArrayList<FirebaseFeedback>>() {
+                };
+
+                firebaseFeedbacks = dataSnapshot.getValue(t);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
         database.getReference("rides/" + firebaseRide.getId()).child("driver").setValue(availableDriver);
     }
 //    public void acceptRide(String userId, String rideRequestId, final onAcceptRideCallBack callBack) {
@@ -153,6 +177,15 @@ public class RideRepository implements ValueEventListener {
         database.getReference("rides/" + firebaseRide.getId()).child("status").setValue(i);
     }
 
+    public void leaveFeedback(String s, float rating) {
+        if (firebaseFeedbacks == null) {
+            firebaseFeedbacks = new ArrayList<>();
+        }
+        firebaseFeedbacks.add(0, new FirebaseFeedback(s, rating, driver.getDriverId()));
+
+        database.getReference("clientsDb/" + firebaseRide.getClientId()).child("feedbacks").setValue(firebaseFeedbacks);
+    }
+
     public interface ProvideRideCallback {
         void onGetRideRequest(FirebaseRide ridesItem);
 
@@ -189,8 +222,16 @@ public class RideRepository implements ValueEventListener {
         void driverNearDestination();
     }
 
+    public void notifyDeclainedClient(String rideId) {
+        database.getReference("rides/" + rideId).child("status").setValue(50);
+    }
+
+
     public FirebaseRide getAcceptedRide() {
         return acceptedRide;
     }
 
+    public void setAcceptedRide(FirebaseRide acceptedRide) {
+        this.acceptedRide = acceptedRide;
+    }
 }

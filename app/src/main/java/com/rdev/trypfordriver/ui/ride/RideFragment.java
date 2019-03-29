@@ -36,14 +36,6 @@ public class RideFragment extends Fragment {
         to_tv = v.findViewById(R.id.to_tv);
         from_tv.setText(fromAdress);
         to_tv.setText(toAdress);
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                if (getActivity() != null) {
-//                    ((MapActivity) getActivity()).presenter.onRideFinishLocation();
-//                }
-//            }
-//        }, 5000);
         backBtn = v.findViewById(R.id.back_btn);
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override

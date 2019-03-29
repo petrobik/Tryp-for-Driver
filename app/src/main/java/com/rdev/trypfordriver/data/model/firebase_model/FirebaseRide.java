@@ -6,6 +6,15 @@ public class FirebaseRide {
     String toAddress;
     LatLngWrapper destinationLocation;
     float fare;
+    String clientId;
+
+    public String getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
+    }
 
     public float getFare() {
         return fare;

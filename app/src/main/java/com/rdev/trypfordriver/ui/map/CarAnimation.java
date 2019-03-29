@@ -32,12 +32,12 @@ public class CarAnimation {
                 elapsed = SystemClock.uptimeMillis() - start;
                 t = elapsed / durationInMs;
                 v = interpolator.getInterpolation(t);
-                marker.setPosition(latLngInterpolator.interpolate(v, startPosition, Utill.locationToLatLng(finalPosition)));
                 // Repeat till progress is complete.
                 if (t < 1) {
                     // Post again 16ms later.
                     handler.postDelayed(this, 16);
                 }
+                marker.setPosition(latLngInterpolator.interpolate(v, startPosition, Utill.locationToLatLng(finalPosition)));
                 marker.setBearing(bearingInterpolator.interpolate(v, lastBearing, startPosition, Utill.locationToLatLng(finalPosition)));
             }
         });

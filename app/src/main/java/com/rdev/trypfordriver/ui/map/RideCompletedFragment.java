@@ -15,10 +15,12 @@ import java.text.DecimalFormat;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
 @SuppressLint("ValidFragment")
-public class RideCompletedFragment extends Fragment {
+public class RideCompletedFragment extends Fragment implements View.OnClickListener {
+    ConstraintLayout parent_layout;
     CardView circle_cardView;
     FloatingActionButton backBtn;
     String price;
@@ -36,10 +38,22 @@ public class RideCompletedFragment extends Fragment {
         View v = inflater.inflate(R.layout.ride_complete, container, false);
         fareTv = v.findViewById(R.id.fare_tv);
         fareTv.setText(price);
+        parent_layout = v.findViewById(R.id.parent_layout);
+        parent_layout.setOnClickListener(this);
         circle_cardView = v.findViewById(R.id.circle_cardView);
-        circle_cardView.setOnClickListener(view -> ((MapActivity) getActivity()).presenter.onRidePriceClick());
+        circle_cardView.setOnClickListener(this);
         backBtn = v.findViewById(R.id.back_btn);
         backBtn.setOnClickListener(view -> ((MapActivity) getActivity()).presenter.onBackClick());
         return v;
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.parent_layout:
+            case R.id.circle_cardView:
+                ((MapActivity) getActivity()).presenter.onShowFeedbackFragment();
+                break;
+        }
     }
 }

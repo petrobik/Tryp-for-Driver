@@ -1,23 +1,21 @@
 package com.rdev.trypfordriver.ui.map;
 
-import android.util.Log;
-
 import com.google.android.gms.maps.model.LatLng;
 
 public interface BearingInterpolator {
     float interpolate(float fraction, float lastbearing, LatLng a, LatLng b);
 
     class Degree implements BearingInterpolator {
+        static double PI = 3.14159;
+
         @Override
         public float interpolate(float fraction, float lastbearing, LatLng from, LatLng to) {
             // http://en.wikipedia.org/wiki/Slerp
-            Log.d("tag", "fraction" + fraction);
             float deduction = (float) (angleFromCoordinate(from, to) - lastbearing);
             return lastbearing + deduction * fraction;
         }
 
         private static double angleFromCoordinate(LatLng latLng1, LatLng latLng2) {
-            double PI = 3.14159;
             double lat1 = latLng1.latitude * PI / 180;
             double long1 = latLng1.longitude * PI / 180;
             double lat2 = latLng2.latitude * PI / 180;
