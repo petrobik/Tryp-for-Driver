@@ -38,6 +38,10 @@ public class LocationRepository {
             cachedLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
         } else if (gps_enabled) {
             cachedLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        } else {
+            cachedLocation = new Location("");
+            cachedLocation.setLongitude(0);
+            cachedLocation.setLatitude(0);
         }
     }
 

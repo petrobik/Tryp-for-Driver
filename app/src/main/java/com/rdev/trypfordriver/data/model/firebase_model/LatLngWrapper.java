@@ -35,4 +35,9 @@ public class LatLngWrapper {
     public LatLng getLocation() {
         return new LatLng(lat, lng);
     }
+
+    @Override
+    public String toString() {
+        return lat + "," + lng;
+    }
 }

@@ -9,9 +9,9 @@ import com.rdev.trypfordriver.data.model.firebase_model.AvailableDriver;
 import com.rdev.trypfordriver.data.model.firebase_model.FirebaseRide;
 import com.rdev.trypfordriver.data.model.on_demand_rides.RidesItem;
 import com.rdev.trypfordriver.data.source.DriverRepository;
-import com.rdev.trypfordriver.data.source.FakeLocationRepository;
 import com.rdev.trypfordriver.data.source.LocationRepository;
 import com.rdev.trypfordriver.data.source.RideRepository;
+import com.rdev.trypfordriver.data.source.TimePredictionsCallBack;
 import com.rdev.trypfordriver.di.ActivityScoped;
 import com.rdev.trypfordriver.ui.LeaveFeedbackFragment;
 import com.rdev.trypfordriver.ui.contact_to_user.ContactToUserFragment;
@@ -27,9 +27,9 @@ import java.util.Calendar;
 import javax.inject.Inject;
 
 @ActivityScoped
-public class MapPresenter implements MapContract.Presenter, RideRepository.CompareLocationCallBack, LocationRepository.ProvideLocationCallback {
+public class MapPresenter implements MapContract.Presenter, RideRepository.CompareLocationCallBack, LocationRepository.ProvideLocationCallback, TimePredictionsCallBack {
     MapContract.View mView;
-    FakeLocationRepository locationRepository;
+    LocationRepository locationRepository;
     RouteToClientFragment routeToClientFragment;
     ReadyToTripFragment readyToTripFragment;
     RidesItem item;
@@ -45,7 +45,7 @@ public class MapPresenter implements MapContract.Presenter, RideRepository.Compa
 
 
     @Inject
-    public MapPresenter(FakeLocationRepository locationRepository, RideRepository rideRepository, DriverRepository driverRepository) {
+    public MapPresenter(LocationRepository locationRepository, RideRepository rideRepository, DriverRepository driverRepository) {
         this.locationRepository = locationRepository;
         this.rideRepository = rideRepository;
         this.driverRepository = driverRepository;
@@ -63,6 +63,7 @@ public class MapPresenter implements MapContract.Presenter, RideRepository.Compa
     public void onDeclineRequest() {
         mView.popBackStack();
         mView.clearMap();
+        mView.hidePopUp();
         rideRepository.updateRideStatus(50);
         driverRepository.declineRideRequest();
     }
@@ -110,6 +111,7 @@ public class MapPresenter implements MapContract.Presenter, RideRepository.Compa
                 public void onGetRideRequest(FirebaseRide ridesItem) {
                     if (mView != null) {
                         routeToClientFragment = new RouteToClientFragment(ridesItem.getFromAddress());
+                        calculatePredictedTime(false);
                         mView.showFragment(routeToClientFragment);
                         mView.drawRoute(locationRepository.getCachedLatLng(), ridesItem.getPickUpLocation().getLocation());
                     }
@@ -121,6 +123,10 @@ public class MapPresenter implements MapContract.Presenter, RideRepository.Compa
                 }
             });
         }
+    }
+
+    private void calculatePredictedTime(boolean repeat) {
+        rideRepository.updateTimePredictions(locationRepository.getCachedLatLng(), this);
     }
 
     @Override
@@ -141,6 +147,7 @@ public class MapPresenter implements MapContract.Presenter, RideRepository.Compa
         rideRepository.acceptRide(driver);
         rideRepository.rideToPickUp();
         driverRepository.setDriverAvailable(false);
+        startTrackingPredeictedTime();
         mView.showFragment(new ContactToUserFragment(rideRepository.getFirebaseRide()));
 //                rideRepository.rideToPickUp();
 //        rideRepository.acceptRide("18406", item.getRideRequestId(), new RideRepository.onAcceptRideCallBack() {
@@ -157,6 +164,18 @@ public class MapPresenter implements MapContract.Presenter, RideRepository.Compa
 //        });
     }
 
+    private void startTrackingPredeictedTime() {
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (rideRepository.getAcceptedRide() != null && rideRepository.getStatus() == RideRepository.STATUS_RIDE_TO_PICK_UP) {
+                    rideRepository.updateTimePredictions(locationRepository.getCachedLatLng(), MapPresenter.this);
+                    handler.postDelayed(this, 60 * 1000);
+                }
+            }
+        }, 30 * 1000);
+    }
+
     @Override
     public void onClientClick() {
         Log.d("tag", "onClientClick");
@@ -171,6 +190,7 @@ public class MapPresenter implements MapContract.Presenter, RideRepository.Compa
                 acceptedRide.getDestinationLocation().getLocation());
         rideRepository.updateRideStatus(STATUS_RIDE_STARTED);
         mView.showFragment(new RideFragment(acceptedRide.getFromAddress(), acceptedRide.getToAddress()));
+        mView.hidePopUp();
     }
 
     @Override
@@ -250,5 +270,14 @@ public class MapPresenter implements MapContract.Presenter, RideRepository.Compa
             }
         }
         mView.showCurrentLocation(location);
+    }
+
+    @Override
+    public void onTimePredicted(String time) {
+        if (mView != null) {
+            mView.updatePopUp(rideRepository.getFirebaseRide().getFromAddress(), time);
+        }
+        rideRepository.pushTimePrediction(time);
+        Log.d("tag", "onTimePredicted" + time);
     }
 }

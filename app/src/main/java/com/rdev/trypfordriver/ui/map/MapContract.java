@@ -29,6 +29,10 @@ public interface MapContract {
         void clearMap();
 
         void openLoginActivity();
+
+        void updatePopUp(String adress, String time);
+
+        void hidePopUp();
     }
 
     interface Presenter {

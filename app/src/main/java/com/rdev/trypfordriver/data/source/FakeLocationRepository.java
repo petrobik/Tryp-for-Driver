@@ -26,6 +26,8 @@ public class FakeLocationRepository {
         return Utill.locationToLatLng(cachedLocation);
     }
 
+    //Used for test
+
     @Inject
     public FakeLocationRepository() {
         fakeLocations = new ArrayList<>();
@@ -71,7 +73,7 @@ public class FakeLocationRepository {
                     cachedLocation = location;
                     callback.onLocationChanged(location);
                     i++;
-                    handler.postDelayed(this, 2500);
+                    handler.postDelayed(this, 40 * 1000);
                 }
             }
         });

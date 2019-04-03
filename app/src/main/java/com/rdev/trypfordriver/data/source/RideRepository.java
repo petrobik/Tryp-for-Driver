@@ -10,7 +10,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 import com.rdev.trypfordriver.data.ApiService;
+import com.rdev.trypfordriver.data.DirectionsApiService;
 import com.rdev.trypfordriver.data.model.FirebaseFeedback;
+import com.rdev.trypfordriver.data.model.directions.DirectionsResponse;
 import com.rdev.trypfordriver.data.model.firebase_model.AvailableDriver;
 import com.rdev.trypfordriver.data.model.firebase_model.FirebaseDriver;
 import com.rdev.trypfordriver.data.model.firebase_model.FirebaseRide;
@@ -21,10 +23,14 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import androidx.annotation.NonNull;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 @Singleton
 public class RideRepository implements ValueEventListener {
     private final DriverRepository driverRepository;
+    private final DirectionsApiService directionsApiService;
     ApiService service;
     FirebaseRide acceptedRide;
     int rideStatus = 0;
@@ -47,8 +53,9 @@ public class RideRepository implements ValueEventListener {
 
 
     @Inject
-    public RideRepository(ApiService service, FirebaseDatabase database, DriverRepository driverRepository) {
+    public RideRepository(DirectionsApiService directionsApiService, ApiService service, FirebaseDatabase database, DriverRepository driverRepository) {
         this.service = service;
+        this.directionsApiService = directionsApiService;
         this.database = database;
         this.driverRepository = driverRepository;
     }
@@ -186,6 +193,12 @@ public class RideRepository implements ValueEventListener {
         database.getReference("clientsDb/" + firebaseRide.getClientId()).child("feedbacks").setValue(firebaseFeedbacks);
     }
 
+    public void pushTimePrediction(String time) {
+        if (firebaseRide != null) {
+            database.getReference("rides/" + firebaseRide.getId()).child("predictedTime").setValue(time);
+        }
+    }
+
     public interface ProvideRideCallback {
         void onGetRideRequest(FirebaseRide ridesItem);
 
@@ -233,5 +246,20 @@ public class RideRepository implements ValueEventListener {
 
     public void setAcceptedRide(FirebaseRide acceptedRide) {
         this.acceptedRide = acceptedRide;
+    }
+
+    public void updateTimePredictions(LatLng driverLocation, TimePredictionsCallBack callBack) {
+        directionsApiService.getPredictedTime(driverLocation.latitude + "," + driverLocation.longitude,
+                firebaseRide.getPickUpLocation().toString(), "AIzaSyC41CJUJMGe_9n44zKA0Jk1BAQ_pWp_p1o").enqueue(new Callback<DirectionsResponse>() {
+            @Override
+            public void onResponse(Call<DirectionsResponse> call, Response<DirectionsResponse> response) {
+                callBack.onTimePredicted(response.body().getRoutes().get(0).getLegs().get(0).getDuration().getText());
+            }
+
+            @Override
+            public void onFailure(Call<DirectionsResponse> call, Throwable t) {
+
+            }
+        });
     }
 }

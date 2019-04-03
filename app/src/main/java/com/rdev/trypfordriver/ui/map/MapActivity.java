@@ -60,6 +60,7 @@ import java.util.ArrayList;
 import javax.inject.Inject;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -80,6 +81,9 @@ public class MapActivity extends DaggerAppCompatActivity implements MapContract.
     private TextView notification;
     Bitmap marker_bitmap;
     ImageView menu_icon;
+    TextView pop_up_time;
+    TextView pop_up_address;
+    CardView popUp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,6 +105,9 @@ public class MapActivity extends DaggerAppCompatActivity implements MapContract.
         }
         mDrawerLayout = findViewById(R.id.drawer_layout);
 
+        popUp = findViewById(R.id.pop_up);
+        pop_up_address = findViewById(R.id.pop_up_address);
+        pop_up_time = findViewById(R.id.pop_up_time);
         menu_icon = findViewById(R.id.menu_icon);
         menu_icon.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -287,6 +294,20 @@ public class MapActivity extends DaggerAppCompatActivity implements MapContract.
     public void openLoginActivity() {
         startActivity(new Intent(this, WelcomeActivity.class));
         finish();
+    }
+
+    @Override
+    public void updatePopUp(String address, String time) {
+        if (popUp.getVisibility() == View.INVISIBLE) {
+            popUp.setVisibility(View.VISIBLE);
+        }
+        pop_up_address.setText(address);
+        pop_up_time.setText(time);
+    }
+
+    @Override
+    public void hidePopUp() {
+        popUp.setVisibility(View.INVISIBLE);
     }
 
 

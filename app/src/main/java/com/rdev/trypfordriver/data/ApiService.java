@@ -55,4 +55,5 @@ public interface ApiService {
 
     @GET("api/v1/ride_request_status")
     Call<StatusResponse> ride_request_status(@Query("ride_request_id") String id);
+
 }

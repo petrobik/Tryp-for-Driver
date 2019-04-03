@@ -5,6 +5,7 @@ import android.location.LocationManager;
 
 import com.google.firebase.database.FirebaseDatabase;
 import com.rdev.trypfordriver.data.ApiService;
+import com.rdev.trypfordriver.data.DirectionsApiService;
 import com.rdev.trypfordriver.data.localDb.DriverRoomDatabase;
 
 import java.net.CookieHandler;
@@ -46,6 +47,21 @@ public abstract class MapRepositoryModule {
     static ApiService provideApiService(Retrofit retrofit) {
         return retrofit.create(ApiService.class);
     }
+
+    @Singleton
+    @Provides
+    static DirectionsApiService provideDirectionsApiService() {
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://maps.googleapis.com/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
+                .build();
+        return retrofit.create(DirectionsApiService.class);
+    }
+
 
     @Singleton
     @Provides
