@@ -7,10 +7,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 import com.rdev.trypfordriver.data.ApiService;
 import com.rdev.trypfordriver.data.DirectionsApiService;
+import com.rdev.trypfordriver.data.model.FirebaseClient;
 import com.rdev.trypfordriver.data.model.FirebaseFeedback;
 import com.rdev.trypfordriver.data.model.directions.DirectionsResponse;
 import com.rdev.trypfordriver.data.model.firebase_model.AvailableDriver;
@@ -62,6 +62,7 @@ public class RideRepository implements ValueEventListener {
 
     FirebaseDriver driver;
     AvailableDriver availableDriver;
+    FirebaseClient firebaseClient;
 
     public void setRideListener(final ProvideRideCallback callback) {
         this.callback = callback;
@@ -75,6 +76,27 @@ public class RideRepository implements ValueEventListener {
                 FirebaseRide ride = dataSnapshot.getValue(FirebaseRide.class);
                 firebaseRide = ride;
                 callback.onGetRideRequest(ride);
+                getClient(ride.getClientId(), callback);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public void getClient(String clienId, ProvideRideCallback callback) {
+//        firebaseClient = new FirebaseClient();
+        database.getReference("clientsDb/" + clienId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                if (firebaseClient == null) {
+//                    firebaseClient = new FirebaseClient();
+//                }
+                FirebaseClient client = dataSnapshot.getValue(FirebaseClient.class);
+                firebaseClient = client;
+                callback.onGetClientInfo(client);
             }
 
             @Override
@@ -105,20 +127,22 @@ public class RideRepository implements ValueEventListener {
         firebaseRide.setDriver(availableDriver);
         this.acceptedRide = firebaseRide;
         firebaseFeedbacks = new ArrayList<>();
-        database.getReference("clientsDb/" + firebaseRide.getClientId()).child("feedbacks").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                GenericTypeIndicator<ArrayList<FirebaseFeedback>> t = new GenericTypeIndicator<ArrayList<FirebaseFeedback>>() {
-                };
+//        database.getReference("clientsDb/" + firebaseRide.getClientId()).child("feedbacks").addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                GenericTypeIndicator<ArrayList<FirebaseFeedback>> t = new GenericTypeIndicator<ArrayList<FirebaseFeedback>>() {
+//                };
+//
+//                firebaseFeedbacks = dataSnapshot.getValue(t);
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
 
-                firebaseFeedbacks = dataSnapshot.getValue(t);
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
         database.getReference("rides/" + firebaseRide.getId()).child("driver").setValue(availableDriver);
     }
 //    public void acceptRide(String userId, String rideRequestId, final onAcceptRideCallBack callBack) {
@@ -180,6 +204,11 @@ public class RideRepository implements ValueEventListener {
         return rideStatus;
     }
 
+    public FirebaseClient getFirebaseClient() {
+
+        return firebaseClient;
+    }
+
     public void updateRideStatus(int i) {
         database.getReference("rides/" + firebaseRide.getId()).child("status").setValue(i);
     }
@@ -200,7 +229,10 @@ public class RideRepository implements ValueEventListener {
     }
 
     public interface ProvideRideCallback {
+//        void onGetRideRequest(FirebaseRide ridesItem);
         void onGetRideRequest(FirebaseRide ridesItem);
+
+        void onGetClientInfo(FirebaseClient client);
 
         void onError(String error);
     }

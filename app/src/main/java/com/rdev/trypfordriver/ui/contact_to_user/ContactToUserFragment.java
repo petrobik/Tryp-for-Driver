@@ -11,7 +11,10 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.google.firebase.database.DatabaseReference;
 import com.rdev.trypfordriver.R;
+import com.rdev.trypfordriver.data.model.FirebaseClient;
 import com.rdev.trypfordriver.data.model.firebase_model.FirebaseRide;
 import com.rdev.trypfordriver.ui.map.MapActivity;
 import com.rdev.trypfordriver.ui.map.MapPresenter;
@@ -33,23 +36,40 @@ public class ContactToUserFragment extends Fragment implements View.OnClickListe
     ImageButton backBtn;
     Button otp_btn;
 
+//    FirebaseDatabase mDatabase;
+    DatabaseReference mDatabase;
+    String clientName;
+    FirebaseClient client;
+
     @SuppressLint("ValidFragment")
     public ContactToUserFragment(FirebaseRide rides) {
         this.rides = rides;
     }
 
+    public ContactToUserFragment(FirebaseRide rides, FirebaseClient client) {
+        this.rides = rides;
+        this.client = client;
+    }
+
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.contact_user, container, false);
+
         adress_tv = v.findViewById(R.id.adress_tv);
         if (rides.getToAddress() != null) {
             adress_tv.setText(rides.getFromAddress());
         }
         client_name_tv = v.findViewById(R.id.client_name_tv);
         client_name_tv.setOnClickListener(this);
+
         client_avatar_iv = v.findViewById(R.id.client_avatar_iv);
         client_avatar_iv.setOnClickListener(this);
+
+        client_name_tv.setText(client.getFirst_name());
+
+        Glide.with(this).load(client.getPhoto()).into(client_avatar_iv);
 
         backBtn = v.findViewById(R.id.back_btn);
         backBtn.setOnClickListener(this);

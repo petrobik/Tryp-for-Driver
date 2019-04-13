@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.rdev.trypfordriver.data.model.FirebaseClient;
 import com.rdev.trypfordriver.data.model.firebase_model.AvailableDriver;
 import com.rdev.trypfordriver.data.model.firebase_model.FirebaseRide;
 import com.rdev.trypfordriver.data.model.on_demand_rides.RidesItem;
@@ -118,6 +119,11 @@ public class MapPresenter implements MapContract.Presenter, RideRepository.Compa
                 }
 
                 @Override
+                public void onGetClientInfo(FirebaseClient client) {
+
+                }
+
+                @Override
                 public void onError(String error) {
 
                 }
@@ -145,10 +151,11 @@ public class MapPresenter implements MapContract.Presenter, RideRepository.Compa
         AvailableDriver driver = new AvailableDriver(driverRepository.getDriverId());
         driver.setLatLng(Utill.locationToLatLng(locationRepository.getCachedLocation()));
         rideRepository.acceptRide(driver);
+//        rideRepository.getClient();
         rideRepository.rideToPickUp();
         driverRepository.setDriverAvailable(false);
         startTrackingPredeictedTime();
-        mView.showFragment(new ContactToUserFragment(rideRepository.getFirebaseRide()));
+        mView.showFragment(new ContactToUserFragment(rideRepository.getFirebaseRide(), rideRepository.getFirebaseClient()));
 //                rideRepository.rideToPickUp();
 //        rideRepository.acceptRide("18406", item.getRideRequestId(), new RideRepository.onAcceptRideCallBack() {
 //            @Override
@@ -280,4 +287,5 @@ public class MapPresenter implements MapContract.Presenter, RideRepository.Compa
         rideRepository.pushTimePrediction(time);
         Log.d("tag", "onTimePredicted" + time);
     }
+
 }
