@@ -1,11 +1,16 @@
 package com.rdev.trypfordriver.ui;
 
+import android.content.Intent;
+import android.media.Image;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.rdev.trypfordriver.R;
 
@@ -15,6 +20,9 @@ import androidx.appcompat.app.AppCompatActivity;
 public class CastomerActivity extends AppCompatActivity {
 
     FloatingActionButton floatingActionButton;
+    ImageView customerImageView;
+    TextView customerNameTextView;
+    TextView customerRatingTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +42,20 @@ public class CastomerActivity extends AppCompatActivity {
             getWindow().getDecorView().setSystemUiVisibility(flags);
         }
 
+        Intent intent = getIntent();
+        String customerName = intent.getStringExtra("name");
+        float customerRating = intent.getExtras().getFloat("rating");
+        String customerImage = intent.getStringExtra("photo");
+
         setContentView(R.layout.castomer_activity);
+
+        customerImageView = findViewById(R.id.customer_image);
+        customerNameTextView = findViewById(R.id.screen24_customer_name_textView);
+        customerRatingTextView = findViewById(R.id.screen24_customer_rating_textView);
+
+        customerNameTextView.setText(customerName);
+        customerRatingTextView.setText(Float.toString(customerRating));
+        Glide.with(this).load(customerImage).into(customerImageView);
 
         floatingActionButton = findViewById(R.id.screen23_fab);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {

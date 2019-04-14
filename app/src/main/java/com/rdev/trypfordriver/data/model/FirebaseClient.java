@@ -1,7 +1,6 @@
 package com.rdev.trypfordriver.data.model;
 
 import java.util.List;
-import java.util.Map;
 
 public class FirebaseClient {
 
@@ -11,7 +10,7 @@ public class FirebaseClient {
 
     private String first_name;
 
-    private int stars;
+    private float stars;
 
     private String photo;
 
@@ -28,7 +27,7 @@ public class FirebaseClient {
         return first_name;
     }
 
-    public int getStars() {
+    public float getStars() {
         return stars;
     }
 
@@ -48,7 +47,7 @@ public class FirebaseClient {
         this.first_name = first_name;
     }
 
-    public void setStars(int stars) {
+    public void setStars(float stars) {
         this.stars = stars;
     }
 

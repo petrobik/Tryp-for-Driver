@@ -4,6 +4,7 @@ package com.rdev.trypfordriver.ui.map;
 import android.location.Location;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.rdev.trypfordriver.data.model.FirebaseClient;
 import com.rdev.trypfordriver.data.model.on_demand_rides.RidesItem;
 
 import androidx.fragment.app.Fragment;
@@ -20,7 +21,7 @@ public interface MapContract {
 
         void drawRoute(LatLng from, LatLng to);
 
-        void showClientDetailActivity();
+        void showClientDetailActivity(FirebaseClient client);
 
         void showToast(String s);
 

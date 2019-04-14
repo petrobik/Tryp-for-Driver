@@ -48,6 +48,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.material.navigation.NavigationView;
 import com.rdev.trypfordriver.R;
+import com.rdev.trypfordriver.data.model.FirebaseClient;
 import com.rdev.trypfordriver.ui.CastomerActivity;
 import com.rdev.trypfordriver.ui.expense_tracking.ExpenseActivity;
 import com.rdev.trypfordriver.ui.ready_to_trip.ReadyToTripFragment;
@@ -266,8 +267,13 @@ public class MapActivity extends DaggerAppCompatActivity implements MapContract.
     }
 
     @Override
-    public void showClientDetailActivity() {
-        startActivity(new Intent(this, CastomerActivity.class));
+    public void showClientDetailActivity(FirebaseClient client) {
+        Intent intent = new Intent(this, CastomerActivity.class);
+        String clientName = client.getFirst_name() + " " + client.getLast_name();
+        intent.putExtra("name", clientName);
+        intent.putExtra("rating", client.getStars());
+        intent.putExtra("photo", client.getPhoto());
+        startActivity(intent);
     }
 
     @Override

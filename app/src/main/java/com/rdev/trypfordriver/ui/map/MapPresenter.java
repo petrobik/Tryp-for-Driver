@@ -186,7 +186,7 @@ public class MapPresenter implements MapContract.Presenter, RideRepository.Compa
     @Override
     public void onClientClick() {
         Log.d("tag", "onClientClick");
-        mView.showClientDetailActivity();
+        mView.showClientDetailActivity(rideRepository.getFirebaseClient());
     }
 
     @Override

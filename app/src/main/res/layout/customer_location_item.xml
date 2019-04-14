@@ -7,103 +7,90 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/materialCardView16"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="135dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
         app:cardCornerRadius="10dp"
         app:cardElevation="4dp"
+        app:layout_constraintBottom_toTopOf="@+id/accept_btn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="54dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/materialCardView15"
-                android:layout_width="match_parent"
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/client_avatar_iv"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:src="@drawable/client_user_small_avatar" />
+
+            <TextView
+                android:id="@+id/client_name_tv"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:cardElevation="8dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                android:layout_marginStart="8dp"
+                android:fontFamily="@font/opensans_bold"
+                android:text="Daniel"
+                android:layout_weight="1"
+                android:textColor="#000" />
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+            <TextView
+                android:id="@+id/textView44"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="28dp"
+                android:text="15 min"
+                android:textColor="#0172FF"
+                android:textSize="14sp"
+                android:textStyle="bold" />
 
-                    <ImageView
-                        android:id="@+id/client_avatar_iv"
-                        android:layout_width="wrap_content"
-                        android:layout_height="0dp"
-                        android:layout_marginStart="24dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="8dp"
-                        android:adjustViewBounds="true"
-                        android:src="@drawable/client_user_small_avatar"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+        </LinearLayout>
 
-                    <TextView
-                        android:id="@+id/client_name_tv"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:fontFamily="@font/opensans_bold"
-                        android:text="Daniel"
-                        android:textColor="#000"
-                        app:layout_constraintBottom_toBottomOf="@+id/client_avatar_iv"
-                        app:layout_constraintStart_toEndOf="@+id/client_avatar_iv"
-                        app:layout_constraintTop_toTopOf="@+id/client_avatar_iv" />
-
-                    <TextView
-                        android:id="@+id/textView44"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginEnd="24dp"
-                        android:layout_marginBottom="16dp"
-                        android:text="15 min"
-                        android:textAllCaps="true"
-                        android:textColor="#0172FF"
-                        android:textSize="14sp"
-                        android:textStyle="bold"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-            </androidx.cardview.widget.CardView>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_marginTop="54dp"
+            android:background="@drawable/rectangle">
 
             <TextView
                 android:id="@+id/textView45"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
+                android:layout_marginStart="26dp"
                 android:layout_marginTop="16dp"
                 android:text="Customer Location"
-                android:textAllCaps="true"
                 android:textColor="#979797"
-                android:textSize="13sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/materialCardView15" />
+                android:textSize="13sp" />
 
             <TextView
                 android:id="@+id/adress_tv"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="16dp"
+                android:layout_marginStart="26dp"
+                android:layout_marginTop="2dp"
                 android:text="333 Rolling Park, New York"
-                android:textAllCaps="true"
                 android:textColor="#000000"
                 android:textSize="14sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/textView45"
                 app:layout_constraintTop_toBottomOf="@+id/textView45" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
+
+
 
     </androidx.cardview.widget.CardView>
+
+
 
 </LinearLayout>
