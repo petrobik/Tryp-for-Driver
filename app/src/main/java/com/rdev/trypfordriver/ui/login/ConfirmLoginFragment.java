@@ -39,6 +39,7 @@ public class ConfirmLoginFragment extends Fragment implements View.OnClickListen
                 break;
             case R.id.send_btn:
                 Toast.makeText(getContext(), "Verify", Toast.LENGTH_SHORT).show();
+                ((LoginActivity) getActivity()).verifySms(pinEntryEditText.getText().toString());
 //                ((LoginActivity) getActivity()).verifySms(pinEntryEditText.getText().toString());
         }
     }

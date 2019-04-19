@@ -22,7 +22,7 @@ public class PinEntryEditText extends AppCompatEditText {
 
     private float mSpace = 24; //24 dp by default, space between the lines
     private float mCharSize;
-    private float mNumChars = 4;
+    private float mNumChars = 6;
     private float mLineSpacing = 8; //8dp by default, height of the text from our lines
     private int mMaxLength = 4;
 

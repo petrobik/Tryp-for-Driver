@@ -51,6 +51,7 @@ import com.rdev.trypfordriver.R;
 import com.rdev.trypfordriver.data.model.FirebaseClient;
 import com.rdev.trypfordriver.ui.CastomerActivity;
 import com.rdev.trypfordriver.ui.expense_tracking.ExpenseActivity;
+import com.rdev.trypfordriver.ui.login.LoginActivity;
 import com.rdev.trypfordriver.ui.ready_to_trip.ReadyToTripFragment;
 import com.rdev.trypfordriver.ui.report.ReportActivity;
 import com.rdev.trypfordriver.ui.trip_history.TripHistoryActivity;
@@ -100,6 +101,16 @@ public class MapActivity extends DaggerAppCompatActivity implements MapContract.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        final int flags = View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            getWindow().getDecorView().setSystemUiVisibility(flags);
+        }
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             Window w = getWindow();
             w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
@@ -298,7 +309,8 @@ public class MapActivity extends DaggerAppCompatActivity implements MapContract.
 
     @Override
     public void openLoginActivity() {
-        startActivity(new Intent(this, WelcomeActivity.class));
+//        startActivity(new Intent(this, WelcomeActivity.class));
+        startActivity(new Intent(this, LoginActivity.class));
         finish();
     }
 

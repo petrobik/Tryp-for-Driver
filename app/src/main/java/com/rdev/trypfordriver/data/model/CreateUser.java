@@ -1,6 +1,8 @@
 package com.rdev.trypfordriver.data.model;
 
-public class CreateUser {
+import java.io.Serializable;
+
+public class CreateUser implements Serializable {
     private String first_name;
     private String last_name;
     private String email;

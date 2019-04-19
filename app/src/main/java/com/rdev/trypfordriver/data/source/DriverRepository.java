@@ -12,6 +12,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.rdev.trypfordriver.data.localDb.CachedDriver;
 import com.rdev.trypfordriver.data.localDb.DriverDao;
 import com.rdev.trypfordriver.data.localDb.DriverRoomDatabase;
+import com.rdev.trypfordriver.data.model.Driver;
 import com.rdev.trypfordriver.data.model.firebase_model.AvailableDriver;
 import com.rdev.trypfordriver.data.model.firebase_model.FirebaseDriver;
 import com.rdev.trypfordriver.data.model.firebase_model.FirebaseVehicle;
@@ -24,7 +25,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 
 @Singleton
-public class DriverRepository implements ValueEventListener {
+public class DriverRepository {
     FirebaseDatabase database;
 
     private String driverId; //test value, driver id will be available after login
@@ -39,6 +40,7 @@ public class DriverRepository implements ValueEventListener {
     DriverDao driverDao;
     LiveData<CachedDriver> cachedDriverLiveData;
     CachedDriver cachedDriver;
+    Driver currentDriver;
 
 
     @Inject
@@ -84,41 +86,41 @@ public class DriverRepository implements ValueEventListener {
         availableDriver.setId(id);
 
         currentDriverReference = database.getReference("driversDb/" + driverId);
-        currentDriverReference.addListenerForSingleValueEvent(this);
+//        currentDriverReference.addListenerForSingleValueEvent(this);
     }
 
-    @Override
-    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-        Log.d("tag", "onDataChange in initModels");
-        driver = dataSnapshot.getValue(FirebaseDriver.class);
-        //Check if driver model present in direBase
-        if (driver != null) {
-            Log.d("tag", "onDataChange" + driver.toString());
-        } else {
-            //create new Driver
-            driver = new FirebaseDriver();
-            driver.setId(driverId);
-            driver.setCategory("Tryp");
-            driver.setType("liftback");
-            driver.setFirstName("Test");
-            driver.setLastName("test");
-            driver.setMaxLuggage(4);
-            driver.setMaxPassenger(8);
-            driver.setRating(4);
-            FirebaseVehicle vehicle = new FirebaseVehicle();
-            vehicle.setColor("#FFFFFF");
-            vehicle.setImage("https://s.aolcdn.com/dims-global/dims3/GLOB/legacy_thumbnail/640x400/quality/80/https://s.aolcdn.com/commerce/autodata/images/USC70TSC024B021001.jpg");
-            vehicle.setModel("Tesla Model S");
-            driver.setVehicle(vehicle);
-            driver.setImage("https://cdn1.iconfinder.com/data/icons/occupations-3/100/07-512.png");
-            currentDriverReference.setValue(driver);
-        }
-    }
-
-    @Override
-    public void onCancelled(@NonNull DatabaseError databaseError) {
-        Log.d("tag", "onCancelled" + databaseError.getDetails());
-    }
+//    @Override
+//    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//        Log.d("tag", "onDataChange in initModels");
+//        driver = dataSnapshot.getValue(FirebaseDriver.class);
+//        //Check if driver model present in direBase
+//        if (driver != null) {
+//            Log.d("tag", "onDataChange" + driver.toString());
+//        } else {
+//            //create new Driver
+//            driver = new FirebaseDriver();
+//            driver.setId(driverId);
+//            driver.setCategory("Tryp");
+//            driver.setType("liftback");
+//            driver.setFirstName("Test");
+//            driver.setLastName("test");
+//            driver.setMaxLuggage(4);
+//            driver.setMaxPassenger(8);
+//            driver.setRating(4);
+//            FirebaseVehicle vehicle = new FirebaseVehicle();
+//            vehicle.setColor("#FFFFFF");
+//            vehicle.setImage("https://s.aolcdn.com/dims-global/dims3/GLOB/legacy_thumbnail/640x400/quality/80/https://s.aolcdn.com/commerce/autodata/images/USC70TSC024B021001.jpg");
+//            vehicle.setModel("Tesla Model S");
+//            driver.setVehicle(vehicle);
+//            driver.setImage("https://cdn1.iconfinder.com/data/icons/occupations-3/100/07-512.png");
+//            currentDriverReference.setValue(driver);
+//        }
+//    }
+//
+//    @Override
+//    public void onCancelled(@NonNull DatabaseError databaseError) {
+//        Log.d("tag", "onCancelled" + databaseError.getDetails());
+//    }
 
     public LiveData<CachedDriver> getCachedDriverLiveData() {
         return cachedDriverLiveData;
@@ -131,11 +133,17 @@ public class DriverRepository implements ValueEventListener {
         new insertAsyncTask(driverDao).execute(cachedDriver);
     }
 
-    public void setDriver(CachedDriver cachedDriver) {
-        this.cachedDriver = cachedDriver;
-        driverId = Integer.toString(cachedDriver.getDriverId());
+//    public void setDriver(CachedDriver cachedDriver) {
+//        this.cachedDriver = cachedDriver;
+//        driverId = Integer.toString(cachedDriver.getDriverId());
+//        initModels(driverId);
+//    }
+
+    public void setDriver(String driverId) {
+        this.driverId = driverId;
         initModels(driverId);
     }
+
 
     public void deleteCachedDriver() {
         new Thread(new Runnable() {

@@ -28,11 +28,12 @@ import static com.rdev.trypfordriver.utill.Utill.getDialingCode;
 public class LoginFragment extends Fragment implements View.OnClickListener {
     ImageButton backBtn;
     TextView sign_up_tv;
-    AppCompatButton send_code_card;
+    CardView send_code_card;
     EditText email_et;
     EditText password_et;
     CardView phone_card;
     TextView countrTv;
+    EditText phone_number_et;
 
 
     @Nullable
@@ -46,8 +47,9 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         sign_up_tv.setOnClickListener(this);
         send_code_card = v.findViewById(R.id.send_code_btn);
         send_code_card.setOnClickListener(this);
-        email_et = v.findViewById(R.id.email_et);
-        password_et = v.findViewById(R.id.login_password_et);
+//        email_et = v.findViewById(R.id.email_et);
+//        password_et = v.findViewById(R.id.login_password_et);
+        phone_number_et = v.findViewById(R.id.phone_number_et);
         phone_card = v.findViewById(R.id.cardView2);
         phone_card.setOnClickListener(this);
         return v;
@@ -64,8 +66,10 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                 ((LoginActivity) getActivity()).onFinish();
                 break;
             case R.id.send_code_btn:
-//                ((LoginActivity) getActivity()).number.setPhone_number(email_et.getText().toString());
-                ((LoginActivity) getActivity()).onSendCode(email_et.getText().toString(), password_et.getText().toString());
+                ((LoginActivity) getActivity()).number.setPhone_number(phone_number_et.getText().toString());
+                ((LoginActivity) getActivity()).onSendCode();
+
+//                ((LoginActivity) getActivity()).onSendCode(email_et.getText().toString(), password_et.getText().toString());
                 break;
             case R.id.cardView2:
                 final PickerPhoneDialog dialog = new PickerPhoneDialog();

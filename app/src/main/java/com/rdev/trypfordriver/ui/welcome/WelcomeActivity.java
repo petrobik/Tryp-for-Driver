@@ -28,7 +28,7 @@ import io.fabric.sdk.android.Fabric;
 public class WelcomeActivity extends AppCompatActivity implements View.OnClickListener {
     AppCompatButton login_btn;
     AppCompatButton sign_up_btn;
-    private String TAG = "tag";
+    private String TAG = "WelcomeActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +85,8 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
         switch (view.getId()) {
             case R.id.login_btn:
                 intent = new Intent(WelcomeActivity.this, LoginActivity.class);
+                intent.putExtra("IsNewUser", false);
+//                intent = new Intent(WelcomeActivity.this, LoginActivity.class);
                 break;
             case R.id.sign_up_btn:
                 intent = new Intent(WelcomeActivity.this, CreateActivity.class);

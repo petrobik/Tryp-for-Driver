@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.auth.FirebaseAuth;
 import com.rdev.trypfordriver.data.model.FirebaseClient;
 import com.rdev.trypfordriver.data.model.firebase_model.AvailableDriver;
 import com.rdev.trypfordriver.data.model.firebase_model.FirebaseRide;
@@ -103,7 +104,7 @@ public class MapPresenter implements MapContract.Presenter, RideRepository.Compa
 
     @Override
     public void onDriverAvailableClick(boolean isChecked) {
-        Log.d("tag", "onDriverAvailableClick");
+        Log.d("tag", "onDriverAvailableClick " + isChecked);
         driverRepository.setDriverAvailable(isChecked);
         if (driverRepository.isDriverAvailable()) {
             rideRepository.setRideListener(new RideRepository.ProvideRideCallback() {
@@ -240,7 +241,8 @@ public class MapPresenter implements MapContract.Presenter, RideRepository.Compa
 
     @Override
     public void onLogoutClick() {
-        driverRepository.deleteCachedDriver();
+//        driverRepository.deleteCachedDriver();
+        FirebaseAuth.getInstance().signOut();
         mView.openLoginActivity();
     }
 
@@ -274,8 +276,15 @@ public class MapPresenter implements MapContract.Presenter, RideRepository.Compa
             if (rideRepository.getAcceptedRide() != null) {
                 rideRepository.pushDriverLocation(Utill.locationToLatLng(location));
                 rideRepository.compareLocation(Utill.locationToLatLng(location), this);
+
+//                if (rideRepository.getStatus() == 1) {
+//                    mView.drawRoute(Utill.locationToLatLng(location), rideRepository.getAcceptedRide().getPickUpLocation().getLocation());
+//                } else if (rideRepository.getStatus() == 2) {
+//                    mView.drawRoute(Utill.locationToLatLng(location), rideRepository.getAcceptedRide().getDestinationLocation().getLocation());
+//                }
             }
         }
+
         mView.showCurrentLocation(location);
     }
 
